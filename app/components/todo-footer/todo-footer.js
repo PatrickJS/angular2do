@@ -10,7 +10,7 @@ import {Style} from 'decorators/style.js';
   selector: 'todo-footer',
   componentServices: [
     AngularFire,
-    bind(Firebase).toValue(new Firebase('https://webapi.firebaseio.com/test'))
+    bind(Firebase).toValue(new Firebase('https://angular2do.firebaseio.com/todo'))
   ],
   template: new TemplateConfig({
     url: 'app/components/todo-footer/todo-footer.html',

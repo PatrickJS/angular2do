@@ -16,7 +16,7 @@ var keymap = {
   selector: 'todo-header',
   componentServices: [
     AngularFire,
-    bind(Firebase).toValue(new Firebase('https://webapi.firebaseio.com/test'))
+    bind(Firebase).toValue(new Firebase('https://angular2do.firebaseio.com/todo'))
   ],
   template: new TemplateConfig({
     url:    'app/components/todo-header/todo-header.html',
