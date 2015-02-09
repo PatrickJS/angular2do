@@ -4,13 +4,20 @@ Angular 2 is not packaged or ready for production... but this is a todo app with
 
 ### Installation
 
+1. `$ npm install -g serve`
+2. `$ serve`
+3. `localhost:8080`
+
+### Installation with your own Angular build
+
 1. Clone angular2/angular2 somewhere on your disk.
 2. Follow the instructions for Angular 2 and `gulp build` there.
 3. `ln -s ~/angular/dist/js/dev deps/ng` in the root of this repo.
 4. `$ npm install -g serve`
 5. `$ serve`
-6. Write your AtScript code in todo.js.
-7. `localhost:8080`
+6. Update systemjs path from 'deps/angular2' to 'deps/ng'
+7. Write your AtScript code in app/ folder
+8. `localhost:8080`
 
 ### Static deps
 (already included in the deps folder)
