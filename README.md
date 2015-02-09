@@ -36,3 +36,4 @@ edited the atscript flags in `traceur.js` (see `index.html` for the names of the
  * Create Flux version
  * Refactor Firebase todoStorage into TodoStorage service
  * Refactor style management
+ * Add server for FastBoot
