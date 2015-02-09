@@ -14,7 +14,14 @@ export class Style {
   }
   set condition(value) {
     if (value) {
-      this.extendStyles(value);
+      if (typeof value === 'object') {
+        this.extendStyles(value);
+      }
+      else if (Array.isArray(value)) {
+        for (var i = 0; i < value.length; i++) {
+          this.extendStyles(value[i])
+        };
+      }
     }
     return value;
   }
