@@ -1,0 +1,97 @@
+<style>
+  button {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: 100%;
+    vertical-align: baseline;
+    font-family: inherit;
+    font-weight: inherit;
+    color: inherit;
+    -webkit-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
+    -ms-font-smoothing: antialiased;
+    font-smoothing: antialiased;
+  }
+  ul li {
+    display: inline;
+  }
+
+  ul li a {
+    color: inherit;
+    margin: 3px;
+    padding: 3px 7px;
+    text-decoration: none;
+    border: 1px solid transparent;
+    border-radius: 3px;
+  }
+
+  ul li a.selected,
+  ul li a:hover {
+    border-color: rgba(175, 47, 47, 0.1);
+  }
+
+  ul li a.selected {
+    border-color: rgba(175, 47, 47, 0.2);
+  }
+
+  button,
+  button:active {
+    float: right;
+    position: relative;
+    line-height: 20px;
+    text-decoration: none;
+    cursor: pointer;
+    visibility: hidden;
+    position: relative;
+  }
+
+  button::after {
+    visibility: visible;
+    content: 'Clear completed';
+    position: absolute;
+    right: 0;
+    white-space: nowrap;
+  }
+
+  button:hover::after {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 430px) {
+    footer {
+      height: 50px;
+    }
+
+    ul {
+      bottom: 10px;
+    }
+  }
+
+</style>
+<footer [style]="styles.footer" [ng-show]="todoService.list.length > 0">
+  <span [style]="styles.count">
+    <strong [style]="styles.countString">{{ remainingCount }}</strong>
+    items left
+  </span>
+  <div [class.hidden]="true"></div>
+  <ul [style]="styles.filters">
+    <li>
+      <a href="#/" [class.selected]="locationPath == ''">All</a>
+    </li>
+    <li>
+      <a href="#/active" [class.selected]="locationPath == 'active'">Active</a>
+    </li>
+    <li>
+      <a href="#/completed" [class.selected]="locationPath == 'completed'">Completed</a>
+    </li>
+  </ul>
+  <button
+    [ng-show]="completedCount"
+    (click)="clearCompleted()"
+  >Clear completed ({{ completedCount }})</button>
+</footer>
