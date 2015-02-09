@@ -1,82 +1,31 @@
-<!-- TODOL refactor into more components -->
-<style>@import "/deps/css/base.css";</style>
 <style>
-  /* really annoying without this*/
-  .no_selection {
-    -webkit-user-select: none; /* webkit (safari, chrome) browsers */
-    -moz-user-select: none; /* mozilla browsers */
-    -khtml-user-select: none; /* webkit (konqueror) browsers */
-    -ms-user-select: none; /* IE10+ */
+  a:hover {
+    text-decoration: underline;
+  }
+  footer p {
+    line-height: 1;
+  }
+
+  footer a {
+    color: inherit;
+    text-decoration: none;
+    font-weight: 400;
+  }
+
+  footer a:hover {
+    text-decoration: underline;
   }
 </style>
-<section id="todoapp">
 
-  <header id="header">
-    <h1>todos</h1>
-    <input id="new-todo"
-      placeholder="What needs to be done?"
-      (keyup)="enterTodo($event)"
-      [value]="text"
-      autofocus
-    >
-  </header>
+<h1 [style]="styles.title">todos</h1>
 
-  <section id="main" [ng-show]="todoService.list.length > 0">
-    <input id="toggle-all" type="checkbox"
-      (click)="toggleAll($event)"
-      [checked]="remainingCount == 0"
-    >
-    <label for="toggle-all">Mark all as complete</label>
-
-    <ul id="todo-list" class="no_selection">
-      <li !foreach="#todo in todoService.list"
-        [class.editing]="todoEdit == todo"
-        [class.completed]="todo.completed"
-      >
-        <div class="view" [class.hidden]="todoEdit == todo">
-          <input class="toggle" type="checkbox"
-            (click)="completeMe(todo)"
-            [checked]="todo.completed">
-          <label
-            (dblclick)="editTodo($event, todo)"
-          >{{ todo.title }}</label>
-          <button class="destroy"
-            (click)="deleteMe(todo)"
-          ></button>
-        </div>
-        <div>
-          <input class="edit"
-            [ng-show]="todoEdit == todo"
-            [todo-focus]="todoEdit == todo"
-            [value]="todo.title"
-            (keyup)="doneEditing($event, todo)"
-          >
-        </div>
-      </li>
-    </ul>
-
-  </section>
-
-  <footer id="footer" [ng-show]="todoService.list.length > 0">
-    <span id="todo-count">
-      <strong>{{ remainingCount }}</strong>
-      items left
-    </span>
-    <div [class.hidden]="true"></div>
-    <ul id="filters">
-      <li>
-        <a href="#/" [class.selected]="locationPath == ''">All</a>
-      </li>
-      <li>
-        <a href="#/active" [class.selected]="locationPath == 'active'">Active</a>
-      </li>
-      <li>
-        <a href="#/completed" [class.selected]="locationPath == 'completed'">Completed</a>
-      </li>
-    </ul>
-    <button id="clear-completed" class="hidden"
-      [class.visible]="completedCount"
-      (click)="clearCompleted()"
-    >Clear completed ({{ completedCount }})</button>
-  </footer>
+<section [style]="styles.section">
+  <todo-header></todo-header>
+  <todo-main></todo-main>
+  <todo-footer></todo-footer>
 </section>
+
+<footer [style]="styles.footer">
+  <p>Double-click to edit a todo</p>
+  <p>Created by <a href="http://twitter.com/_davideast">David East</a> and <a href="http://twitter.com/gdi2290">gdi2290</a></p>
+</footer>
