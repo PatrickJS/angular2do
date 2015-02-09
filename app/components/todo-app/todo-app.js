@@ -53,8 +53,6 @@ class NgShow {
       el.style.display = 'block';
       DOM.removeClass(el, 'hidden');
       DOM.addClass(el, 'visible');
-      // el.className = el.className.replace('hidden', '');
-      // el.className += ' visible';
     } else {
       el.style.display = 'none';
       DOM.removeClass(el, 'visible');
@@ -68,6 +66,37 @@ class NgShow {
   }
 }
 
+@Decorator({
+  selector: '[ng-hide]',
+  bind: {
+    'ng-hide': 'ngHide'
+  }
+})
+class NgHide {
+  element:NgElement;
+  set ngHide(value) {
+    var el = this.element.domElement;
+    if (value) {
+      el.style.display = 'none';
+      DOM.removeClass(el, 'visible');
+      DOM.addClass(el, 'hidden');
+    } else {
+      el.style.display = 'block';
+      DOM.removeClass(el, 'hidden');
+      DOM.addClass(el, 'visible');
+    }
+    return value;
+  }
+  constructor(el: NgElement) {
+    console.log('ng-hide', el);
+    this.element = el;
+  }
+  toggleClass() {
+    this.element.domElement
+
+  }
+  toggleVisible
+}
 
 @Component({
   selector: 'todo-app',
@@ -76,15 +105,16 @@ class NgShow {
     bind(Firebase).toValue(new Firebase('https://webapi.firebaseio.com/test'))
   ],
   template: new TemplateConfig({
-    url: '/todo.html',
+    url: 'components/todo-app/todo-app.html',
     directives: [
       Foreach,
       TodoFocus,
-      NgShow
+      NgShow,
+      NgHide
     ]
   })
 })
-class TodoApp {
+export default class TodoApp {
   text: string;
   todoService: FirebaseArray;
   todoEdit: any;
@@ -161,6 +191,3 @@ class TodoApp {
 }
 
 
-export function main() {
-  bootstrap(TodoApp);
-}
