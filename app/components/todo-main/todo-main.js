@@ -53,7 +53,12 @@ export class TodoMain {
       list: {
         margin: '0',
         padding: '0',
-        listStyle: 'none'
+        listStyle: 'none',
+        WebkitUserSelect: 'none',
+        MozUserSelect: 'none',
+        KhtmlUserSelect: 'none',
+        msUserSelect: 'none',
+        userSelect: 'none'
       },
       todo: {
         position: 'relative',
@@ -70,7 +75,8 @@ export class TodoMain {
         bottom: '0',
         margin: 'auto 0',
         border: 'none', /* Mobile Safari */
-        appearance: 'none'
+        appearance: 'none',
+        outline: 'none'
       },
       label: {
         whiteSpace: 'pre',
@@ -82,18 +88,38 @@ export class TodoMain {
         transition: 'color 0.4s'
       },
       destroy: {
-        display: 'none',
-        position: 'absolute',
-        top: '0',
-        right: '10px',
-        bottom: '0',
-        width: '40px',
-        height: '40px',
-        margin: 'auto 0',
-        fontSize: '30px',
-        color: '#cc9a9a',
-        marginBottom: '11px',
-        transition: 'color 0.2s ease-out'
+        margin: '0',
+        padding: '0',
+        border: '0',
+        background: 'none',
+        fontSize: '100%',
+        verticalAlign: 'baseline',
+        fontFamily: 'inherit',
+        fontWeight: 'inherit',
+        color: 'inherit',
+        appearance: 'none',
+        fontSmoothing: 'antialiased',
+        outline: 'none'
+      },
+      editButton: {
+        position: 'relative',
+        margin: '0',
+        width: '100%',
+        fontSize: '24px',
+        fontFamily: 'inherit',
+        fontWeight: 'inherit',
+        lineHeight: '1.4em',
+        outline: 'none',
+        color: 'inherit',
+        padding: '6px',
+        border: '1px solid #999',
+        boxShadow: 'inset 0 -1px 5px 0 rgba(0, 0, 0, 0.2)',
+        msBoxSizing: 'border-box',
+        boxSizing: 'border-box',
+        WebkitFontSmoothing: 'antialiased',
+        MozFontSmoothing: 'antialiased',
+        msFontSmoothing: 'antialiased',
+        fontSmoothing: 'antialiased'
       }
     }; // end styles
   }

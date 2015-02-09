@@ -1,55 +1,4 @@
 <style>
-  /* really annoying without this*/
-
-  button {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    background: none;
-    font-size: 100%;
-    vertical-align: baseline;
-    font-family: inherit;
-    font-weight: inherit;
-    color: inherit;
-    -webkit-appearance: none;
-    -ms-appearance: none;
-    appearance: none;
-    -webkit-font-smoothing: antialiased;
-    -moz-font-smoothing: antialiased;
-    -ms-font-smoothing: antialiased;
-    font-smoothing: antialiased;
-  }
-  button,
-  input[type="checkbox"] {
-    outline: none;
-  }
-  .no_selection {
-    -webkit-user-select: none; /* webkit (safari, chrome) browsers */
-    -moz-user-select: none; /* mozilla browsers */
-    -khtml-user-select: none; /* webkit (konqueror) browsers */
-    -ms-user-select: none; /* IE10+ */
-  }
-  .edit {
-    position: relative;
-    margin: 0;
-    width: 100%;
-    font-size: 24px;
-    font-family: inherit;
-    font-weight: inherit;
-    line-height: 1.4em;
-    border: 0;
-    outline: none;
-    color: inherit;
-    padding: 6px;
-    border: 1px solid #999;
-    box-shadow: inset 0 -1px 5px 0 rgba(0, 0, 0, 0.2);
-    -ms-box-sizing: border-box;
-    box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
-    -moz-font-smoothing: antialiased;
-    -ms-font-smoothing: antialiased;
-    font-smoothing: antialiased;
-  }
   .toggle-all:before {
     content: '❯';
     font-size: 22px;
@@ -119,7 +68,7 @@
     text-decoration: line-through;
   }
 
-  ul li .destroy {
+  ul li button {
     display: none;
     position: absolute;
     top: 0;
@@ -134,15 +83,15 @@
     transition: color 0.2s ease-out;
   }
 
-  ul li .destroy:hover {
+  ul li button:hover {
     color: #af5b5e;
   }
 
-  ul li .destroy:after {
+  ul li button:after {
     content: '×';
   }
 
-  ul li:hover .destroy {
+  ul li:hover button {
     display: block;
   }
 
@@ -196,13 +145,15 @@
           (dblclick)="editTodo($event, todo)"
         >{{ todo.title }}</label>
 
-        <button class="destroy"
+        <button
+          [style]="styles.destroy"
           (click)="deleteMe(todo)"
         ></button>
 
       </div>
       <div>
         <input class="edit"
+          [style]="styles.editButton"
           [ng-show]="todoEdit == todo"
           [todo-focus]="todoEdit == todo"
           [value]="todo.title"
