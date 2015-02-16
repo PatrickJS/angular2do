@@ -1,4 +1,31 @@
 <style>
+  h1 {
+    height: 130px;
+    margin: 0;
+    line-height: 1.4em;
+    width: 100%;
+    font-size: 100px;
+    font-weight: 100;
+    text-align: center;
+    color: rgba(175, 47, 47, 0.15);
+    text-rendering: optimizeLegibility;
+  }
+
+  section {
+    background: #fff;
+    margin: 0 0 40px 0;
+    position: relative;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  footer {
+    margin: 65px auto 0;
+    color: #bfbfbf;
+    font-size: 10px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    text-align: center;
+  }
+
   a:hover {
     text-decoration: underline;
   }
@@ -17,15 +44,15 @@
   }
 </style>
 
-<h1 [style]="styles.title">todos</h1>
+<h1>Angular2do</h1>
 
-<section [style]="styles.section">
+<section>
   <todo-header></todo-header>
   <todo-main></todo-main>
   <todo-footer></todo-footer>
 </section>
 
-<footer [style]="styles.footer">
+<footer>
   <p>Double-click to edit a todo</p>
   <p>Created by <a href="http://twitter.com/_davideast">David East</a> and <a href="http://twitter.com/gdi2290">gdi2290</a></p>
 </footer>
