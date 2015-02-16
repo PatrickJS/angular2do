@@ -1,13 +1,72 @@
 <style>
-  .toggle-all:before {
-    content: '❯';
-    font-size: 22px;
-    color: #e6e6e6;
-    padding: 10px 27px 10px 27px;
+
+  section {
+    position: relative;
+    z-index: 2;
+    border-top: 1px solid #e6e6e6;
   }
 
-  .toggle-all:checked:before {
-    color: #737373;
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -khtml-uUser-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  li {
+    position: relative;
+    font-size: 24px;
+    border-bottom: 1px solid #ededed;
+  }
+
+  button {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: 100%;
+    vertical-align: baseline;
+    font-family: inherit;
+    font-weight: inherit;
+    color: inherit;
+    -webkit-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
+    -ms-font-smoothing: antialiased;
+    font-smoothing: antialiased;
+  }
+
+  button,
+  input[type="checkbox"] {
+    outline: none;
+  }
+
+  .edit input {
+    position: relative;
+    margin: 0;
+    width: 100%;
+    font-size: 24px;
+    font-family: inherit;
+    font-weight: inherit;
+    line-height: 1.4em;
+    border: 0;
+    outline: none;
+    color: inherit;
+    padding: 6px;
+    border: 1px solid #999;
+    box-shadow: inset 0 -1px 5px 0 rgba(0, 0, 0, 0.2);
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
+    -ms-font-smoothing: antialiased;
+    font-smoothing: antialiased;
   }
 
   ul li:last-child {
@@ -19,18 +78,29 @@
     padding: 0;
   }
 
-  ul li.editing .edit {
+  ul li.editing .edit input {
     display: block;
     width: 506px;
     padding: 13px 17px 12px 17px;
-    margin: 0 0 0 43px;
+    margin: -1px -1px -1px 44px;
   }
 
   ul li.editing .view {
     display: none;
   }
 
-  ul li .toggle {
+  label {
+    white-space: pre;
+    word-break: break-word;
+    padding: 15px 60px 15px 15px;
+    margin-left: 45px;
+    display: block;
+    line-height: 1.2;
+    -webkit-transition: color 0.4s;
+    transition: color 0.4s;
+  }
+
+  ul li input[type=checkbox] {
     text-align: center;
     width: 40px;
     /* auto, since non-WebKit browsers doesn't support input styling */
@@ -43,13 +113,14 @@
     -webkit-appearance: none;
     -ms-appearance: none;
     appearance: none;
+    outline: none;
   }
 
-  ul li .toggle:after {
+  ul li input[type=checkbox]:after {
     content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-10 -18 100 135"><circle cx="50" cy="50" r="50" fill="none" stroke="#ededed" stroke-width="3"/></svg>');
   }
 
-  ul li .toggle:checked:after {
+  ul li input[type=checkbox]:checked:after {
     content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-10 -18 100 135"><circle cx="50" cy="50" r="50" fill="none" stroke="#bddad5" stroke-width="3"/><path fill="#5dc2af" d="M72 25L42 71 27 56l-4 4 20 20 34-52z"/></svg>');
   }
 
@@ -95,66 +166,50 @@
     display: block;
   }
 
-  ul li .edit {
+  ul li .edit input {
     display: none;
   }
 
+  /*
   ul li.editing:last-child {
     margin-bottom: -1px;
   }
+  */
   /*
   Hack to remove background from Mobile Safari.
   Can't use it globally since it destroys checkboxes in Firefox
   */
   @media screen and (-webkit-min-device-pixel-ratio:0) {
-    .toggle-all,
-    ul li .toggle {
+    ul li input[type=checkbox] {
       background: none;
     }
 
-    ul li .toggle {
+    ul li input[type=checkbox] {
       height: 40px !important;  /* inline styles */
     }
 
-    .toggle-all {
-      -webkit-transform: rotate(90deg);
-      transform: rotate(90deg);
-      -webkit-appearance: none;
-      appearance: none;
-    }
   }
 
 </style>
 
-<section [style]="styles.main" [ng-show]="todoService.list.length > 0">
-  <ul [style]="styles.list" class="no_selection">
+<section [hidden]="todoService.list.length == 0">
+  <ul>
     <li
       !foreach="#todo in todoService.list"
-      [style]="styles.todo"
       [class.editing]="todoEdit == todo"
       [class.completed]="todo.completed"
     >
-      <div class="view" [ng-hide]="todoEdit == todo">
-
-        <input class="toggle" type="checkbox"
-          [style]="styles.toggle"
-          (click)="completeMe(todo)"
-          [checked]="todo.completed">
-        <label
-          [style]="styles.label"
-          (dblclick)="editTodo($event, todo)"
+      <div class="view" [hidden]="todoEdit == todo">
+        <label (dblclick)="editTodo($event, todo)"
         >{{ todo.title }}</label>
+        <input type="checkbox"
+          [checked]="todo.completed"
+          (click)="completeMe(todo)">
 
-        <button
-          [style]="styles.destroy"
-          (click)="deleteMe(todo)"
-        ></button>
-
+        <button (click)="deleteMe(todo)"></button>
       </div>
-      <div>
-        <input class="edit"
-          [style]="styles.editButton"
-          [ng-show]="todoEdit == todo"
+      <div class="edit" [hidden]="todoEdit != todo">
+        <input type="text"
           [todo-focus]="todoEdit == todo"
           [value]="todo.title"
           (keyup)="doneEditing($event, todo)"
