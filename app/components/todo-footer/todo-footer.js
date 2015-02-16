@@ -1,4 +1,4 @@
-import {Component, TemplateConfig} from 'angular2/angular2';
+import {Component, Template} from 'angular2/angular2';
 import {bind} from 'angular2/di';
 import {AngularFire, FirebaseArray} from 'firebase/AngularFire';
 
@@ -11,15 +11,11 @@ import {Style} from 'decorators/style.js';
   componentServices: [
     AngularFire,
     bind(Firebase).toValue(new Firebase('https://angular2do.firebaseio.com/todo'))
-  ],
-  template: new TemplateConfig({
-    url: 'app/components/todo-footer/todo-footer.html',
-    directives: [
-      NgShow,
-      NgHide,
-      Style
-    ]
-  })
+  ]
+})
+@Template({
+  url: 'app/components/todo-footer/todo-footer.html',
+  directives: []
 })
 export class TodoFooter {
   todoService: FirebaseArray;

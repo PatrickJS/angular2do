@@ -1,4 +1,4 @@
-import {Component, TemplateConfig} from 'angular2/angular2';
+import {Template, Component, Type} from 'angular2/angular2';
 import {bind} from 'angular2/di';
 import {AngularFire, FirebaseArray} from 'firebase/AngularFire';
 import {Autofocus} from 'decorators/autofocus.js';
@@ -17,16 +17,12 @@ var keymap = {
   componentServices: [
     AngularFire,
     bind(Firebase).toValue(new Firebase('https://angular2do.firebaseio.com/todo'))
-  ],
-  template: new TemplateConfig({
-    url:    'app/components/todo-header/todo-header.html',
-    // cssUrl: 'app/components/todo-header/todo-header.css',
-    directives: [
-      Autofocus,
-      Style
-    ]
-  }),
-  compileChildren: true
+  ]
+})
+@Template({
+  url: 'app/components/todo-header/todo-header.html',
+  // cssUrl: 'app/components/todo-header/todo-header.css',
+  directives: []
 })
 export class TodoHeader {
   // text: string;

@@ -1,4 +1,4 @@
-import {Component, TemplateConfig, NgElement} from 'angular2/angular2';
+import {Component, Template} from 'angular2/angular2';
 
 import {TodoHeader} from 'components/todo-header/todo-header.js';
 import {TodoMain} from 'components/todo-main/todo-main.js';
@@ -8,16 +8,15 @@ import {Style} from 'decorators/style.js';
 
 
 @Component({
-  selector: 'todo-app',
-  template: new TemplateConfig({
-    url: 'app/components/todo-app/todo-app.html',
-    directives: [
-      TodoHeader,
-      TodoMain,
-      TodoFooter,
-      Style
-    ]
-  })
+  selector: 'todo-app'
+})
+@Template({
+  url: 'app/components/todo-app/todo-app.html',
+  directives: [
+    TodoHeader,
+    TodoMain,
+    TodoFooter
+  ]
 })
 export class TodoApp {
 

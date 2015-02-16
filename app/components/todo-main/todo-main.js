@@ -1,4 +1,4 @@
-import {Component, TemplateConfig, Foreach, NgElement} from 'angular2/angular2';
+import {Component, Template, Foreach, NgElement} from 'angular2/angular2';
 import {bind} from 'angular2/di';
 import {AngularFire, FirebaseArray} from 'firebase/AngularFire';
 
@@ -19,18 +19,15 @@ var keymap = {
   componentServices: [
     AngularFire,
     bind(Firebase).toValue(new Firebase('https://angular2do.firebaseio.com/todo'))
-  ],
-  template: new TemplateConfig({
-    url: 'app/components/todo-main/todo-main.html',
-    directives: [
-      Foreach,
-      TodoFocus,
-      NgShow,
-      NgHide,
-      Autofocus,
-      Style
-    ]
-  })
+  ]
+  // template: new
+})
+@Template({
+  url: 'app/components/todo-main/todo-main.html',
+  directives: [
+    Foreach,
+    TodoFocus
+  ]
 })
 export class TodoMain {
   text: string;
@@ -42,7 +39,6 @@ export class TodoMain {
     this.todoService = sync.asArray();
     this.text = '';
     this.todoEdit = null;
-    }; // end styles
   }
 
   editTodo($event, todo) {
