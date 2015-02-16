@@ -1,4 +1,13 @@
 <style>
+
+  footer {
+    color: #777;
+    padding: 10px 15px;
+    height: 20px;
+    text-align: center;
+    border-top: 1px solid #e6e6e6;
+  }
+
   button {
     margin: 0;
     padding: 0;
@@ -17,6 +26,25 @@
     -ms-font-smoothing: antialiased;
     font-smoothing: antialiased;
   }
+
+  span {
+    float: left;
+    text-align: left;
+  }
+
+  strong {
+    font-weight: 300;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    position: absolute;
+    right: 0;
+    left: 0;
+  }
+
   ul li {
     display: inline;
   }
@@ -73,25 +101,33 @@
   }
 
 </style>
-<footer [style]="styles.footer" [ng-show]="todoService.list.length > 0">
-  <span [style]="styles.count">
-    <strong [style]="styles.countString">{{ remainingCount }}</strong>
+
+<footer [hidden]="todoService.list.length == 0">
+  <span>
+    <strong>{{ remainingCount }}</strong>
     items left
   </span>
-  <div [class.hidden]="true"></div>
-  <ul [style]="styles.filters">
+
+  <ul>
     <li>
-      <a href="#/" [class.selected]="locationPath == ''">All</a>
+      <a href="/#/"
+        [class.selected]="locationPath == ''"
+      >All</a>
     </li>
     <li>
-      <a href="#/active" [class.selected]="locationPath == 'active'">Active</a>
+      <a href="/#/active"
+        [class.selected]="locationPath == 'active'"
+      >Active</a>
     </li>
     <li>
-      <a href="#/completed" [class.selected]="locationPath == 'completed'">Completed</a>
+      <a href="/#/completed"
+        [class.selected]="locationPath == 'completed'"
+      >Completed</a>
     </li>
   </ul>
+
   <button
-    [ng-show]="completedCount"
+    [hidden]="completedCount == 0"
     (click)="clearCompleted()"
   >Clear completed ({{ completedCount }})</button>
 </footer>
