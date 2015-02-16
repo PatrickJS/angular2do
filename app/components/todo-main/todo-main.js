@@ -2,8 +2,6 @@ import {Component, Template, Foreach, NgElement} from 'angular2/angular2';
 import {bind} from 'angular2/di';
 import {AngularFire, FirebaseArray} from 'firebase/AngularFire';
 
-// import {Autofocus} from 'decorators/autofocus.js';
-import {Style} from 'decorators/style.js';
 import {TodoFocus} from 'decorators/todo-focus.js';
 
 var keymap = {
