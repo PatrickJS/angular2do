@@ -1,8 +1,8 @@
-import {Component, TemplateConfig} from 'angular2/angular2';
+import {Template, Component, Type} from 'angular2/angular2';
 import {bind} from 'angular2/di';
 import {AngularFire, FirebaseArray} from 'firebase/AngularFire';
-import {Autofocus} from 'decorators/autofocus.js';
-import {Style} from 'decorators/style.js';
+import {number, any, string, int} from 'rtts_assert/rtts_assert';
+// import {BindingPropagationConfig} from 'angular2/src/core/compiler/binding_propagation_config';
 
 var keymap = {
   tab: 9,
@@ -17,60 +17,21 @@ var keymap = {
   componentServices: [
     AngularFire,
     bind(Firebase).toValue(new Firebase('https://angular2do.firebaseio.com/todo'))
-  ],
-  template: new TemplateConfig({
-    url:    'app/components/todo-header/todo-header.html',
-    // cssUrl: 'app/components/todo-header/todo-header.css',
-    directives: [
-      Autofocus,
-      Style
-    ]
-  }),
-  compileChildren: true
+  ]
+})
+@Template({
+  url: 'app/components/todo-header/todo-header.html',
+  // cssUrl: 'app/components/todo-header/todo-header.css',
+  directives: []
 })
 export class TodoHeader {
-  // text: string;
+  text: string;
   todoService: FirebaseArray;
 
-  constructor(sync: AngularFire) {
+  constructor( todoService: AngularFire ) {
     // TODO: refactor into TodoStorage service
-    this.todoService = sync.asArray();
-    // this.text = '';
-    this.styles = {
-      toggleAll: {
-        position: 'absolute',
-        top: '13px',
-        left: '-12px',
-        width: '60px',
-        height: '34px',
-        textAlign: 'center',
-        zIndex: '1',
-        outline: 'none',
-        border: 'none' // Mobile Safari
-      },
-      toggleAllLabel: {
-        display: 'none'
-      },
-      input: {
-        'position': 'relative',
-        'margin': '0',
-        'width': '100%',
-        'fontSize': '24px',
-        'fontFamily': 'inherit',
-        'fontWeight': 'inherit',
-        'lineHeight': '1.4em',
-        // 'border': '0',
-        'outline': 'none',
-        'color': 'inherit',
-        // 'border': '1px solid #999',
-        'boxSizing': 'border-box',
-        'fontSmoothing': 'antialiased',
-        'padding': '16px 16px 16px 60px',
-        'border': 'none',
-        'background': 'rgba(0, 0, 0, 0.003)',
-        'boxShadow': 'inset 0 -2px 1px rgba(0,0,0,0.03)'
-      }
-    };
+    this.todoService = todoService.asArray();
+    this.text = '';
   }
 
   enterTodo($event) {

@@ -33,6 +33,7 @@ edited the atscript flags in `traceur.js` (see `index.html` for the names of the
 
 
 ### TODO
+ * Fix filters
  * Create Flux version
  * Refactor Firebase todoStorage into TodoStorage service
  * Refactor style management
