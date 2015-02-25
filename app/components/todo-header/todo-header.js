@@ -1,8 +1,9 @@
 import {Template, Component, Type} from 'angular2/angular2';
-import {bind} from 'angular2/di';
-import {AngularFire, FirebaseArray} from 'firebase/AngularFire';
 import {number, any, string, int} from 'rtts_assert/rtts_assert';
-// import {BindingPropagationConfig} from 'angular2/src/core/compiler/binding_propagation_config';
+
+import {TodoItem} from 'components/todo-item/todo-item';
+
+import {TodoStore} from 'stores/TodoStore';
 
 var keymap = {
   tab: 9,
@@ -15,53 +16,46 @@ var keymap = {
 @Component({
   selector: 'todo-header',
   componentServices: [
-    AngularFire,
-    bind(Firebase).toValue(new Firebase('https://angular2do.firebaseio.com/todo'))
+    TodoStore
   ]
 })
 @Template({
   url: 'app/components/todo-header/todo-header.html',
-  // cssUrl: 'app/components/todo-header/todo-header.css',
-  directives: []
+  directives: [
+    TodoItem
+  ]
 })
 export class TodoHeader {
-  text: string;
-  todoService: FirebaseArray;
+  todoService: TodoStore;
 
-  constructor( todoService: AngularFire ) {
-    // TODO: refactor into TodoStorage service
-    this.todoService = todoService.asArray();
-    this.text = '';
+  constructor( todoService: TodoStore ) {
+    this.todoService = todoService;
   }
 
   enterTodo($event) {
     // ENTER_KEY
     if ($event.which === keymap.enter) {
+      $event.preventDefault();
       // if value
       if ($event.target.value !== '') {
-        // this.text = $event.target.value+'';
         this.addTodo($event.target.value);
         $event.target.value = '';
-        // this.text = '';
       }
     }
   }
-  addTodo(text = this.text) {
-    this.todoService.add({
-      title: text,
+
+  addTodo(text) {
+    if (!text) return;
+    this.todoService.create({
+      content: text,
       completed: false
     });
   }
-  toggleAll($event) {
-    var isComplete = $event.target.checked;
-    this.todoService.list.forEach((todo) => {
-      todo.completed = isComplete;
-      this.todoService.save(todo);
-    });
+
+  toggleAll(isComplete) {
+    this.todoService.toggleAll(isComplete);
   }
-  get remainingCount() {
-    return this.todoService.list.filter((todo) => !todo.completed).length;
-  }
+
 
 }
 

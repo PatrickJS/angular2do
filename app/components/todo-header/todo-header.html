@@ -78,13 +78,13 @@
 <header>
   <label for="toggle-all">Mark all as complete</label>
   <input type="checkbox" id="toggle-all"
-    [hidden]="todoService.list.length == 0"
-    [checked]="remainingCount == 0"
-    (click)="toggleAll($event)"
+    [hidden]="todoService.count == 0"
+    [checked]="todoService.remainingCount == 0"
+    (click)="toggleAll($event.target.checked)"
   />
 
   <input type="text"
-    (keyup)="enterTodo($event)"
+    (keydown)="enterTodo($event)"
     placeholder="What needs to be done?"
     autofocus
   />
