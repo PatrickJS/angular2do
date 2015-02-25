@@ -1,5 +1,4 @@
-import {Template, Component, Type} from 'angular2/angular2';
-import {number, any, string, int} from 'rtts_assert/rtts_assert';
+import {Template, Component} from 'angular2/angular2';
 
 import {TodoItem} from 'components/todo-item/todo-item';
 
