@@ -159,7 +159,7 @@
   }
 </style>
 
-<div class="view" [hidden]="todo.edit == true">
+<div class="view" [hidden]="todoService.state.editing == todo">
   <label
     [class.completed]="todo.completed == true"
   ><content></content></label>
@@ -167,11 +167,11 @@
   <button (click)="deleteMe(todo)"></button>
 </div>
 
-<div class="edit" [hidden]="todo.edit != true">
+<div class="edit" [hidden]="todoService.state.editing != todo">
   <input type="text"
-    [class.editing]="todo.edit == true"
-    [todo-focus]="todo.edit == true"
-    [value]="todo.title"
+    [class.editing]="todoService.state.editing == todo"
+    [todo-focus]="todoService.state.editing == todo"
+    [value]="todo.content"
     (keyup)="doneEditing($event, todo)"
   />
 </div>
