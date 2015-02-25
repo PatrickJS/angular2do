@@ -8,6 +8,21 @@
     border-top: 1px solid #e6e6e6;
   }
 
+  footer:before {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 50px;
+    overflow: hidden;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2),
+    0 8px 0 -3px #f6f6f6,
+    0 9px 1px -3px rgba(0, 0, 0, 0.2),
+    0 16px 0 -6px #f6f6f6,
+    0 17px 2px -6px rgba(0, 0, 0, 0.2);
+  }
+
   button {
     margin: 0;
     padding: 0;
@@ -102,32 +117,35 @@
 
 </style>
 
-<footer [hidden]="todoService.list.length == 0">
+<footer [hidden]="todoService.count == 0">
   <span>
-    <strong>{{ remainingCount }}</strong>
-    items left
+    <strong>{{ todoService.remainingCount }}</strong>
+    {{ pluralize(todoService.remainingCount, 'item') }} left
   </span>
 
   <ul>
     <li>
-      <a href="/#/"
-        [class.selected]="locationPath == ''"
+      <a href="#/"
+        (click)="changeFilter('all')"
+        [class.selected]="currentFilter == 'all'"
       >All</a>
     </li>
     <li>
-      <a href="/#/active"
-        [class.selected]="locationPath == 'active'"
+      <a href="#/active"
+        (click)="changeFilter('active')"
+        [class.selected]="currentFilter == 'active'"
       >Active</a>
     </li>
     <li>
-      <a href="/#/completed"
-        [class.selected]="locationPath == 'completed'"
+      <a href="#/completed"
+        (click)="changeFilter('completed')"
+        [class.selected]="currentFilter == 'completed'"
       >Completed</a>
     </li>
   </ul>
 
   <button
-    [hidden]="completedCount == 0"
+    [hidden]="todoService.completedCount == 0"
     (click)="clearCompleted()"
-  >Clear completed ({{ completedCount }})</button>
+  >Clear completed ({{ todoService.completedCount }})</button>
 </footer>

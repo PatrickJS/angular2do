@@ -1,12 +1,11 @@
 import {Component, Template} from 'angular2/angular2';
-import {bind} from 'angular2/di';
-import {AngularFire, FirebaseArray} from 'firebase/AngularFire';
+
+import {TodoStore} from 'stores/TodoStore';
 
 @Component({
   selector: 'todo-footer',
   componentServices: [
-    AngularFire,
-    bind(Firebase).toValue(new Firebase('https://angular2do.firebaseio.com/todo'))
+    TodoStore
   ]
 })
 @Template({
@@ -14,37 +13,39 @@ import {AngularFire, FirebaseArray} from 'firebase/AngularFire';
   directives: []
 })
 export class TodoFooter {
-  todoService: FirebaseArray;
-  todoEdit: any;
-  constructor(sync: AngularFire) {
-    this.todoService = sync.asArray();
-    this.todoEdit = null;
+  todoService: TodoStore;
+
+  constructor(todoService: TodoStore) {
+
+    this.todoService = todoService;
+    // TODO: location service
+    this.currentFilter = location.hash.replace('#/', '') || 'all';
+    this.changeFilter(this.currentFilter);
+
   }
+
   clearCompleted() {
-    var toClear = {};
-    this.todoService.list.forEach((todo) => {
-      if (todo.completed) {
-        toClear[todo._key] = null;
-      }
-    });
-    this.todoService.bulkUpdate(toClear);
+    this.todoService.clearCompleted();
   }
 
-  toggleFilter($event) {
-    $event.preventDefault();
+  pluralize(count, word) {
+    // TODO: pluralize service
+    return word + (count === 1 ? '' : 's');
   }
 
-  get remainingCount() {
-    return this.todoService.list.filter((todo) => !todo.completed).length;
+  changeFilter(filter = 'all') {
+
+    if (filter === 'all') {
+      this.todoService.filterList((todo) => true);
+    } else if (filter === 'completed') {
+      this.todoService.filterList((todo) => todo.completed);
+    } else if (filter === 'active') {
+      this.todoService.filterList((todo) => !todo.completed);
+    }
+
+    this.currentFilter = filter;
   }
-  get completedCount() {
-    return this.todoService.list.filter((todo) => todo.completed).length;
-  }
-  get locationPath() {
-    // dirty checking plz
-    // TODO: refactor into service
-    return location.hash.replace('#/', '');
-  }
+
 }
 
 
