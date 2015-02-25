@@ -33,7 +33,8 @@ export class TodoFooter {
     return word + (count === 1 ? '' : 's');
   }
 
-  changeFilter(filter = 'all') {
+  changeFilter($event, filter = 'all') {
+    $event.preventDefault();
 
     if (filter === 'all') {
       this.todoService.filterList((todo) => true);

@@ -126,19 +126,19 @@
   <ul>
     <li>
       <a href="#/"
-        (click)="changeFilter('all')"
+        (click)="changeFilter($event, 'all')"
         [class.selected]="currentFilter == 'all'"
       >All</a>
     </li>
     <li>
       <a href="#/active"
-        (click)="changeFilter('active')"
+        (click)="changeFilter($event, 'active')"
         [class.selected]="currentFilter == 'active'"
       >Active</a>
     </li>
     <li>
       <a href="#/completed"
-        (click)="changeFilter('completed')"
+        (click)="changeFilter($event, 'completed')"
         [class.selected]="currentFilter == 'completed'"
       >Completed</a>
     </li>
