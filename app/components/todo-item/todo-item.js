@@ -22,7 +22,7 @@ var keymap = {
   }
 })
 @Template({
-  url: 'app/components/todo-item/todo-item.html',
+  url: System.baseURL+'app/components/todo-item/todo-item.html',
   directives: [
     TodoFocus
   ]

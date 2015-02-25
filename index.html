@@ -49,6 +49,13 @@
         'decorators/*': 'app/decorators/*.js',
         'services/*': 'app/services/*.js',
         'stores/*': 'app/stores/*.js'
+      },
+      transpiler: 'traceur',
+      traceurOptions: {
+        types: true,
+        annotations: true,
+        memberVariables: true,
+        typeAssertionModule: 'rtts_assert/rtts_assert'
       }
     });
 

@@ -9,7 +9,7 @@ import {TodoStore} from 'stores/TodoStore';
   ]
 })
 @Template({
-  url: 'app/components/todo-footer/todo-footer.html',
+  url: System.baseURL+'app/components/todo-footer/todo-footer.html',
   directives: []
 })
 export class TodoFooter {

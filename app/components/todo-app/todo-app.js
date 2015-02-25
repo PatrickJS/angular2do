@@ -13,7 +13,7 @@ import {TodoStore} from 'stores/TodoStore';
   ]
 })
 @Template({
-  url: 'app/components/todo-app/todo-app.html',
+  url: System.baseURL+'app/components/todo-app/todo-app.html',
   directives: [
     TodoHeader,
     TodoMain,

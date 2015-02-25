@@ -12,7 +12,7 @@ import {TodoStore} from 'stores/TodoStore';
   ]
 })
 @Template({
-  url: 'app/components/todo-main/todo-main.html',
+  url: System.baseURL+'app/components/todo-main/todo-main.html',
   directives: [
     Foreach,
     TodoFocus,

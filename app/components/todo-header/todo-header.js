@@ -19,7 +19,7 @@ var keymap = {
   ]
 })
 @Template({
-  url: 'app/components/todo-header/todo-header.html',
+  url: System.baseURL+'app/components/todo-header/todo-header.html',
   directives: [
     TodoItem
   ]
