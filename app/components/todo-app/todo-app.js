@@ -22,7 +22,8 @@ import {TodoStore} from 'stores/TodoStore';
 })
 export class TodoApp {
   constructor(todoStore: TodoStore) {
-    this.todoStore = todoStore.get();
+    console.log('init app');
+    this.todoStore = todoStore;
   }
 
 }
