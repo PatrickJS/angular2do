@@ -26,13 +26,14 @@ var state = {
 };
 
 function setState(newState) {
+  console.log('SET State');
   Object.assign(state, newState);
   // Emit change
 }
 
 export class TodoStore {
   constructor() {
-    console.log('TodoStore');
+    // console.log('TodoStore');
     this.state = state;
   }
 
@@ -83,7 +84,8 @@ export class TodoStore {
   }
 
   toggleAll(isComplete = true) {
-    var todos = this.list.map(function(todo) { todo.completed = isComplete; return todo;}.bind(this));
+    var todos = this.list.map(function(todo) { todo.completed = isComplete; return todo; }.bind(this))
+    ;
     setState({
       list: todos
     });
@@ -105,7 +107,7 @@ export class TodoStore {
   }
 
   remove(todo_id) {
-    var todos = this.list.filter(function(todo) { return todo.id; }.bind(this) !== todo_id);
+    var todos = this.list.filter(function(todo) { return todo.id !== todo_id; }.bind(this));
     setState({
       list: todos
     });
