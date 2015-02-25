@@ -12,12 +12,12 @@ var state = {
     {
       id: 'BDEEFCA3-EF7E-413F-9A53-CCFF6B5A6FBB',
       content: 'fix filters',
-      completed: false
+      completed: true
     },
     {
       id: 'C984C7B7-51B7-476D-B48F-3247871B7678',
       content: 'attend ng-conf',
-      completed: true
+      completed: false
     }
   ],
   filter: todo => todo,
