@@ -1,4 +1,28 @@
 <style>
+
+  footer {
+    color: #777;
+    padding: 10px 15px;
+    height: 20px;
+    text-align: center;
+    border-top: 1px solid #e6e6e6;
+  }
+
+  footer:before {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 50px;
+    overflow: hidden;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2),
+    0 8px 0 -3px #f6f6f6,
+    0 9px 1px -3px rgba(0, 0, 0, 0.2),
+    0 16px 0 -6px #f6f6f6,
+    0 17px 2px -6px rgba(0, 0, 0, 0.2);
+  }
+
   button {
     margin: 0;
     padding: 0;
@@ -17,6 +41,25 @@
     -ms-font-smoothing: antialiased;
     font-smoothing: antialiased;
   }
+
+  span {
+    float: left;
+    text-align: left;
+  }
+
+  strong {
+    font-weight: 300;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    position: absolute;
+    right: 0;
+    left: 0;
+  }
+
   ul li {
     display: inline;
   }
@@ -73,25 +116,36 @@
   }
 
 </style>
-<footer [style]="styles.footer" [ng-show]="todoService.list.length > 0">
-  <span [style]="styles.count">
-    <strong [style]="styles.countString">{{ remainingCount }}</strong>
-    items left
+
+<footer [hidden]="todoService.count == 0">
+  <span>
+    <strong>{{ todoService.remainingCount }}</strong>
+    {{ pluralize(todoService.remainingCount, 'item') }} left
   </span>
-  <div [class.hidden]="true"></div>
-  <ul [style]="styles.filters">
+
+  <ul>
     <li>
-      <a href="#/" [class.selected]="locationPath == ''">All</a>
+      <a href="#/"
+        (click)="changeFilter('all')"
+        [class.selected]="currentFilter == 'all'"
+      >All</a>
     </li>
     <li>
-      <a href="#/active" [class.selected]="locationPath == 'active'">Active</a>
+      <a href="#/active"
+        (click)="changeFilter('active')"
+        [class.selected]="currentFilter == 'active'"
+      >Active</a>
     </li>
     <li>
-      <a href="#/completed" [class.selected]="locationPath == 'completed'">Completed</a>
+      <a href="#/completed"
+        (click)="changeFilter('completed')"
+        [class.selected]="currentFilter == 'completed'"
+      >Completed</a>
     </li>
   </ul>
+
   <button
-    [ng-show]="completedCount"
+    [hidden]="todoService.completedCount == 0"
     (click)="clearCompleted()"
-  >Clear completed ({{ completedCount }})</button>
+  >Clear completed ({{ todoService.completedCount }})</button>
 </footer>
