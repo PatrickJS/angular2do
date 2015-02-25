@@ -35,21 +35,22 @@
   <script src="/angular2do/deps/firebase/firebase.js"></script>
 
   <script>
-    System.baseURL = '/angular2do/';
-    System.paths = {
-      '*': 'deps/angular2/es5/*.js',
-      'angular2/angular2': 'deps/angular2/es5/angular2/angular2.js',
-      'angular2/*': 'deps/angular2/es5/angular2/*.js',
-      'angular2/di': 'deps/angular2/es5/angular2/di.js',
-      'rtts_assert/*': 'deps/angular2/es5/rtts_assert/*.js',
-      'firebase/AngularFire': 'deps/firebase/AngularFire.js',
-      'app/*': 'app/*',
-      'app': 'app/app.js',
-      'components/*': 'app/components/*.js',
-      'decorators/*': 'app/decorators/*.js',
-      'services/*': 'app/services/*.js',
-      'stores/*': 'app/stores/*.js'
-    };
+    System.config({
+      baseURL: '/angular2do/',
+      paths: {
+        '*': 'deps/angular2/es5/*.js',
+        'angular2/angular2': 'deps/angular2/es5/angular2/angular2.js',
+        'angular2/*': 'deps/angular2/es5/angular2/*.js',
+        'angular2/di': 'deps/angular2/es5/angular2/di.js',
+        'rtts_assert/*': 'deps/angular2/es5/rtts_assert/*.js',
+        'firebase/AngularFire': 'deps/firebase/AngularFire.js',
+        'app/*': 'app/*',
+        'components/*': 'app/components/*.js',
+        'decorators/*': 'app/decorators/*.js',
+        'services/*': 'app/services/*.js',
+        'stores/*': 'app/stores/*.js'
+      }
+    });
 
     // none of those work, hack traceur.js Options object instead.
 
@@ -65,7 +66,7 @@
     // System.traceurOptions.annotations = true;
     // System.traceurOptions.memberVariables = true;
 
-    System.import('app')
+    System.import('app/app.js')
     .then(function(module) {
       return module.main();
     })
