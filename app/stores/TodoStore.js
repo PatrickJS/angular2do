@@ -1,10 +1,129 @@
-// import {Inject} from 'angular2/di';
-// import {Inject, Injector, bind} from 'angular2/di';
-// import {string} from 'rtts_assert/rtts_assert';
+import {isPresent} from 'angular2/src/facade/lang';
 
-// new Injector([
-//   bind('UUID').toFactory(() => UUID())
-// ]);
+
+// Closure
+var state = {
+  list: [
+    {
+      id: 'D6835C2B-6DC4-4036-BE04-D7135F55737D',
+      content: 'create todo PR',
+      completed: false
+    },
+    {
+      id: 'BDEEFCA3-EF7E-413F-9A53-CCFF6B5A6FBB',
+      content: 'fix filters',
+      completed: false
+    },
+    {
+      id: 'C984C7B7-51B7-476D-B48F-3247871B7678',
+      content: 'attend ng-conf',
+      completed: true
+    }
+  ],
+  filter: todo => todo,
+  currentFilter: 'all',
+  editing: null
+};
+
+function setState(newState) {
+  Object.assign(state, newState);
+  // Emit change
+}
+
+export class TodoStore {
+  constructor() {
+    console.log('TodoStore');
+    this.state = state;
+  }
+
+  get list() {
+    // Immutable
+    return this.state.list.slice(0);
+  }
+  set list(val) {
+    // Immutable
+  }
+
+  get count() {
+    return this.list.length;
+  }
+  get remainingCount() {
+    return this.list.filter(todo => !todo.completed).length;
+  }
+  get completedCount() {
+    return this.list.filter(todo => todo.completed).length;
+  }
+
+  getFilteredList() {
+    return this.list.filter(this.state.filter);
+  }
+
+  toggleComplete(todo) {
+    todo.completed = !todo.completed;
+    this.update(todo);
+  }
+
+  filterList(func) {
+    setState({
+      filter: func || this.filter
+    });
+  }
+
+  editing(todo = null) {
+    setState({
+      editing: todo
+    });
+  }
+
+  clearCompleted() {
+    var todos = this.list.filter(todo => !todo.completed);
+    setState({
+      list: todos
+    });
+  }
+
+  toggleAll(isComplete = true) {
+    var todos = this.list.map(todo => todo.completed = isComplete);
+    setState({
+      list: todos
+    });
+  }
+
+  create(newTodo) {
+    var completed = isPresent(newTodo.completed) ? newTodo.completed : false;
+    var todo = {
+      id: UUID(),
+      content: newTodo.content,
+      completed: completed,
+      created_at: new Date()
+    };
+    var todos = this.list;
+    todos.push(todo);
+    setState({
+      list: todos
+    });
+  }
+
+  remove(todo_id) {
+    var todos = this.list.filter(todo => todo.id !== todo_id);
+    setState({
+      list: todos
+    });
+  }
+
+  update(todo) {
+    var todos = this.list;
+    for (var i = 0; i < todos.length; i++) {
+      if (todos[i].id && todos[i].id === todo.id) {
+        todos[i] = todo;
+        break;
+      }
+    }
+    setState({
+      list: todos
+    });
+  }
+}
 
 export function UUID() {
   // Otherwise, just use Math.random
@@ -14,65 +133,3 @@ export function UUID() {
     return v.toString(16);
   });
 }
-
-
-export class TodoStore {
-  constructor() {
-    this.state = {
-      todos: [
-        {
-          id: 'D6835C2B-6DC4-4036-BE04-D7135F55737D',
-          content: 'create todo PR',
-          completed: false
-        },
-        {
-          id: 'BDEEFCA3-EF7E-413F-9A53-CCFF6B5A6FBB',
-          content: 'fix filters',
-          completed: false
-        },
-        {
-          id: 'C984C7B7-51B7-476D-B48F-3247871B7678',
-          content: 'attend meetup',
-          completed: false
-        }
-      ],
-      filter: 'all',
-      remainingCount: 0,
-      completedCount: 0,
-      edit: null,
-      loaded: false
-    };
-    // this.filter(location.hash.replace('#/', '') || 'all');
-    // this.state.filter = location.hash.replace('#/', '') || this.state.filter;
-  }
-
-  filter() {
-
-
-  }
-
-  get() {
-    return this.state;
-  }
-
-  set() {
-
-  }
-
-  create(todo) {
-    this.state.todos.push({
-      id: UUID(),
-      content: todo.content,
-      completed: false
-    });
-  }
-
-  find() {
-
-  }
-
-  update() {
-    // this.state.todos.filter(id => id === todoId);
-  }
-}
-
