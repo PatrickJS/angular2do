@@ -48,10 +48,10 @@ export class TodoStore {
     return this.list.length;
   }
   get remainingCount() {
-    return this.list.filter(todo => !todo.completed).length;
+    return this.list.filter(function(todo) { return !todo.completed; }.bind(this)).length;
   }
   get completedCount() {
-    return this.list.filter(todo => todo.completed).length;
+    return this.list.filter(function(todo) { return todo.completed; }.bind(this)).length;
   }
 
   getFilteredList() {
@@ -76,14 +76,14 @@ export class TodoStore {
   }
 
   clearCompleted() {
-    var todos = this.list.filter(todo => !todo.completed);
+    var todos = this.list.filter(function(todo) { return !todo.completed; }.bind(this));
     setState({
       list: todos
     });
   }
 
   toggleAll(isComplete = true) {
-    var todos = this.list.map(todo => todo.completed = isComplete);
+    var todos = this.list.map(function(todo) { todo.completed = isComplete; return todo;}.bind(this));
     setState({
       list: todos
     });
@@ -105,7 +105,7 @@ export class TodoStore {
   }
 
   remove(todo_id) {
-    var todos = this.list.filter(todo => todo.id !== todo_id);
+    var todos = this.list.filter(function(todo) { return todo.id; }.bind(this) !== todo_id);
     setState({
       list: todos
     });
