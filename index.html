@@ -35,15 +35,15 @@
   <script src="/angular2do/deps/firebase/firebase.js"></script>
 
   <script>
-    var base = '/angular2do/';
+    System.baseURL = '/angular2do/';
     System.paths = {
-      '*': base + 'deps/angular2/es5/*.js',
-      'angular2/angular2': base + 'deps/angular2/es5/angular2/angular2.js',
-      'angular2/*': base + 'deps/angular2/es5/angular2/*.js',
-      'angular2/di': base + 'deps/angular2/es5/angular2/di.js',
-      'rtts_assert/*': base + 'deps/angular2/es5/rtts_assert/*.js',
-      'firebase/AngularFire': base + 'deps/firebase/AngularFire.js',
-      'app/*': base + 'app/*',
+      '*': 'deps/angular2/es5/*.js',
+      'angular2/angular2': 'deps/angular2/es5/angular2/angular2.js',
+      'angular2/*': 'deps/angular2/es5/angular2/*.js',
+      'angular2/di': 'deps/angular2/es5/angular2/di.js',
+      'rtts_assert/*': 'deps/angular2/es5/rtts_assert/*.js',
+      'firebase/AngularFire': 'deps/firebase/AngularFire.js',
+      'app/*': 'app/*',
       'app': 'app/app.js',
       'components/*': 'app/components/*.js',
       'decorators/*': 'app/decorators/*.js',
