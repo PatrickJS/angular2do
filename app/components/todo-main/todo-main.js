@@ -1,68 +1,42 @@
 import {Component, Template, Foreach, NgElement} from 'angular2/angular2';
 
-import {TodoFocus} from 'decorators/todo-focus.js';
+import {TodoItem} from 'components/todo-item/todo-item';
+import {TodoFocus} from 'decorators/todo-focus';
 
-var keymap = {
-  tab: 9,
-  enter: 13,
-  esc: 27,
-  up: 38,
-  down: 40
-};
+import {TodoStore} from 'stores/TodoStore';
 
 @Component({
   selector: 'todo-main',
   componentServices: [
-    AngularFire,
-    bind(Firebase).toValue(new Firebase('https://angular2do.firebaseio.com/todo'))
+    TodoStore
   ]
-  // template: new
 })
 @Template({
   url: 'app/components/todo-main/todo-main.html',
   directives: [
     Foreach,
-    TodoFocus
+    TodoFocus,
+    TodoItem
   ]
 })
 export class TodoMain {
-  text: string;
-  todoService: FirebaseArray;
-  todoEdit: any;
+  todoService: TodoStore;
 
-  constructor(sync: AngularFire) {
-    // TODO: refactor into TodoStorage service
-    this.todoService = sync.asArray();
-    this.text = '';
-    this.todoEdit = null;
+  constructor(todoService: TodoStore) {
+    this.todoService = todoService;
   }
 
-  editTodo($event, todo) {
-    this.todoEdit = todo;
+  getList() {
+    // TODO: filter list
+    return this.todoService.getFilteredList();
   }
 
-  completeMe(todo) {
-    todo.completed = !todo.completed;
-    this.todoService.save(todo);
+  editTodo(todo) {
+    this.todoService.editing(todo);
   }
 
-  deleteMe(todo) {
-    this.todoService.remove(todo);
-  }
-
-
-  doneEditing($event, todo) {
-    var which = $event.which;
-    var target = $event.target;
-    if (which === keymap.enter) {
-      todo.title = target.value;
-      this.todoService.save(todo);
-      this.todoEdit = null;
-    }
-    else if (which === keymap.esc) {
-      this.todoEdit = null;
-      target.value = todo.title;
-    }
+  toggleComplete(todo) {
+    this.todoService.toggleComplete(todo);
   }
 
 }

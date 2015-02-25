@@ -74,7 +74,6 @@
   }
 
   ul li.editing {
-    border-bottom: none;
     padding: 0;
   }
 
@@ -192,29 +191,22 @@
 
 </style>
 
-<section [hidden]="todoService.list.length == 0">
+<section [hidden]="todoService.count == 0">
   <ul>
     <li
-      !foreach="#todo in todoService.list"
-      [class.editing]="todoEdit == todo"
-      [class.completed]="todo.completed"
+      template="foreach: #todo in getList()"
+      [class.editing]="todoService.state.editing == todo"
+      [class.completed]="todo.completed == true"
     >
-      <div class="view" [hidden]="todoEdit == todo">
-        <label (dblclick)="editTodo($event, todo)"
-        >{{ todo.title }}</label>
-        <input type="checkbox"
-          [checked]="todo.completed"
-          (click)="completeMe(todo)">
-
-        <button (click)="deleteMe(todo)"></button>
-      </div>
-      <div class="edit" [hidden]="todoEdit != todo">
-        <input type="text"
-          [todo-focus]="todoEdit == todo"
-          [value]="todo.title"
-          (keyup)="doneEditing($event, todo)"
-        >
-      </div>
+      <input type="checkbox"
+        [hidden]="todoService.state.editing == todo"
+        [checked]="todo.completed == true"
+        (click)="toggleComplete(todo)"
+      />
+      <todo-item
+        [value]="todo"
+        (dblclick)="editTodo(todo)"
+      >{{ todo.content }}</todo-item>
     </li>
   </ul>
 </section>
