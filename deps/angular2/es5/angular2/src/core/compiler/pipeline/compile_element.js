@@ -11,6 +11,8 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/collection", "a
       isBlank,
       isPresent,
       Type,
+      StringJoiner,
+      assertionsEnabled,
       DirectiveMetadata,
       Decorator,
       Component,
@@ -20,6 +22,32 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/collection", "a
       ProtoView,
       AST,
       CompileElement;
+  function getElementDescription(domElement) {
+    assert.argumentTypes(domElement, Element);
+    var buf = new StringJoiner();
+    var atts = DOM.attributeMap(domElement);
+    buf.add("<");
+    buf.add(DOM.tagName(domElement).toLowerCase());
+    addDescriptionAttribute(buf, "id", MapWrapper.get(atts, "id"));
+    addDescriptionAttribute(buf, "class", MapWrapper.get(atts, "class"));
+    MapWrapper.forEach(atts, (function(attValue, attName) {
+      if (attName !== "id" && attName !== "class") {
+        addDescriptionAttribute(buf, attName, attValue);
+      }
+    }));
+    buf.add(">");
+    return assert.returnType((buf.toString()), assert.type.string);
+  }
+  function addDescriptionAttribute(buffer, attName, attValue) {
+    assert.argumentTypes(buffer, StringJoiner, attName, assert.type.string, attValue, assert.type.any);
+    if (isPresent(attValue)) {
+      if (attValue.length === 0) {
+        buffer.add(' ' + attName);
+      } else {
+        buffer.add(' ' + attName + '="' + attValue + '"');
+      }
+    }
+  }
   return {
     setters: [function($__m) {
       assert = $__m.assert;
@@ -36,6 +64,8 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/collection", "a
       isBlank = $__m.isBlank;
       isPresent = $__m.isPresent;
       Type = $__m.Type;
+      StringJoiner = $__m.StringJoiner;
+      assertionsEnabled = $__m.assertionsEnabled;
     }, function($__m) {
       DirectiveMetadata = $__m.DirectiveMetadata;
     }, function($__m) {
@@ -54,7 +84,8 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/collection", "a
     execute: function() {
       CompileElement = $__export("CompileElement", (function() {
         var CompileElement = function CompileElement(element) {
-          assert.argumentTypes(element, Element);
+          var compilationUnit = arguments[1] !== (void 0) ? arguments[1] : '';
+          assert.argumentTypes(element, Element, compilationUnit, assert.type.any);
           this.element = element;
           this._attrs = null;
           this._classList = null;
@@ -74,6 +105,14 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/collection", "a
           this.distanceToParentInjector = 0;
           this.compileChildren = true;
           this.ignoreBindings = false;
+          var tplDesc = assertionsEnabled() ? getElementDescription(element) : null;
+          if (compilationUnit !== '') {
+            this.elementDescription = compilationUnit;
+            if (isPresent(tplDesc))
+              this.elementDescription += ": " + tplDesc;
+          } else {
+            this.elementDescription = tplDesc;
+          }
         };
         return ($traceurRuntime.createClass)(CompileElement, {
           refreshAttrs: function() {
@@ -163,7 +202,7 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/collection", "a
         }, {});
       }()));
       Object.defineProperty(CompileElement, "parameters", {get: function() {
-          return [[Element]];
+          return [[Element], []];
         }});
       Object.defineProperty(CompileElement.prototype.addTextNodeBinding, "parameters", {get: function() {
           return [[int], [AST]];
@@ -179,6 +218,12 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/collection", "a
         }});
       Object.defineProperty(CompileElement.prototype.addDirective, "parameters", {get: function() {
           return [[DirectiveMetadata]];
+        }});
+      Object.defineProperty(getElementDescription, "parameters", {get: function() {
+          return [[Element]];
+        }});
+      Object.defineProperty(addDescriptionAttribute, "parameters", {get: function() {
+          return [[StringJoiner], [assert.type.string], []];
         }});
     }
   };

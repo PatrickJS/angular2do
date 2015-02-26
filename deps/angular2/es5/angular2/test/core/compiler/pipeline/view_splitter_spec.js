@@ -17,7 +17,7 @@ System.register(["angular2/test_lib", "angular2/src/facade/collection", "angular
   function main() {
     describe('ViewSplitter', (function() {
       function createPipeline() {
-        return new CompilePipeline([new ViewSplitter(new Parser(new Lexer()), null)]);
+        return new CompilePipeline([new ViewSplitter(new Parser(new Lexer()))]);
       }
       it('should mark root elements as viewRoot', (function() {
         var rootElement = el('<div></div>');
@@ -139,13 +139,13 @@ System.register(["angular2/test_lib", "angular2/src/facade/collection", "angular
           expect((function() {
             var rootElement = el('<div><div *foo *bar="blah"></div></div>');
             createPipeline().process(rootElement);
-          })).toThrowError('Only one template directive per element is allowed: foo and bar cannot be used simultaneously!');
+          })).toThrowError('Only one template directive per element is allowed: foo and bar cannot be used simultaneously in <div *foo *bar="blah">');
         }));
-        it('should not allow template and bang directives on the same element', (function() {
+        it('should not allow template and star directives on the same element', (function() {
           expect((function() {
-            var rootElement = el('<div><div *foo template="blah"></div></div>');
+            var rootElement = el('<div><div *foo template="bar"></div></div>');
             createPipeline().process(rootElement);
-          })).toThrowError('Only one template directive per element is allowed: blah and foo cannot be used simultaneously!');
+          })).toThrowError('Only one template directive per element is allowed: bar and foo cannot be used simultaneously in <div *foo template="bar">');
         }));
       }));
     }));

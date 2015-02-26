@@ -19,7 +19,7 @@ export function main() {
     function createPipeline(ignoreBindings = false) {
       return new CompilePipeline([new MockStep((parent, current, control) => {
         current.ignoreBindings = ignoreBindings;
-      }), new PropertyBindingParser(new Parser(new Lexer()), null)]);
+      }), new PropertyBindingParser(new Parser(new Lexer()))]);
     }
     it('should not parse bindings when ignoreBindings is true', () => {
       var results = createPipeline(true).process(el('<div [a]="b"></div>'));

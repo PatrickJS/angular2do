@@ -162,7 +162,13 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/lang", "angular
           },
           _compileTemplate: function(template, tplElement, component) {
             var pipeline = new CompilePipeline(this.createSteps(component, template));
-            var compileElements = pipeline.process(tplElement);
+            var compilationCtxtDescription = stringify(this._reader.read(component).type);
+            var compileElements;
+            try {
+              compileElements = pipeline.process(tplElement, compilationCtxtDescription);
+            } catch (ex) {
+              return PromiseWrapper.reject(ex);
+            }
             var protoView = compileElements[0].inheritedProtoView;
             this._compilerCache.set(component, protoView);
             MapWrapper.delete(this._compiling, component);

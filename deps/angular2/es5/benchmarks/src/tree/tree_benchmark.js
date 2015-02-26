@@ -148,7 +148,7 @@ System.register(["rtts_assert/rtts_assert", "angular2/change_detection", "angula
       "factory": (function(exHandler, cd) {
         return new LifeCycle(exHandler, cd);
       }),
-      "parameters": [[ExceptionHandler, ChangeDetector]],
+      "parameters": [[ExceptionHandler], [ChangeDetector]],
       "annotations": []
     });
     reflector.registerGetters({

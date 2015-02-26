@@ -103,7 +103,7 @@ System.register(["rtts_assert/rtts_assert", "angular2/test_lib", "angular2/src/f
           } else if (isPresent(parent)) {
             current.inheritedProtoView = parent.inheritedProtoView;
           }
-        })), new ElementBinderBuilder(parser, null)]);
+        })), new ElementBinderBuilder(parser)]);
       }
       function instantiateView(protoView) {
         evalContext = new Context();

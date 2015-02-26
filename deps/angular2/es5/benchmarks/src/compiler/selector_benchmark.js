@@ -39,7 +39,7 @@ System.register(["angular2/src/core/compiler/selector", "angular2/src/facade/lan
     function match() {
       var matchCount = 0;
       for (var i = 0; i < count; i++) {
-        fixedMatcher.match(fixedSelectors[i], (function(selected) {
+        fixedMatcher.match(fixedSelectors[i], (function(selector, selected) {
           matchCount += selected;
         }));
       }

@@ -122,7 +122,7 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/lang", "angular
           remove: function(key) {
             assert.argumentTypes(key, assert.type.string);
             if (!key.contains('.')) {
-              return this._data.remove(key);
+              return MapWrapper.delete(this._data, key);
             }
             var pieces = key.split('.');
             var last = ListWrapper.last(pieces);

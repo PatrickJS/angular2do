@@ -12,21 +12,21 @@ export class CompilePipeline {
     assert.argumentTypes(steps, assert.genericType(List, CompileStep));
     this._control = new CompileControl(steps);
   }
-  process(rootElement) {
-    assert.argumentTypes(rootElement, Element);
+  process(rootElement, compilationCtxtDescription = '') {
+    assert.argumentTypes(rootElement, Element, compilationCtxtDescription, assert.type.string);
     var results = ListWrapper.create();
-    this._process(results, null, new CompileElement(rootElement));
+    this._process(results, null, new CompileElement(rootElement, compilationCtxtDescription), compilationCtxtDescription);
     return assert.returnType((results), List);
   }
-  _process(results, parent, current) {
-    assert.argumentTypes(results, assert.type.any, parent, CompileElement, current, CompileElement);
+  _process(results, parent, current, compilationCtxtDescription = '') {
+    assert.argumentTypes(results, assert.type.any, parent, CompileElement, current, CompileElement, compilationCtxtDescription, assert.type.string);
     var additionalChildren = this._control.internalProcess(results, 0, parent, current);
     if (current.compileChildren) {
       var node = DOM.firstChild(DOM.templateAwareRoot(current.element));
       while (isPresent(node)) {
         var nextNode = DOM.nextSibling(node);
         if (DOM.isElementNode(node)) {
-          this._process(results, current, new CompileElement(node));
+          this._process(results, current, new CompileElement(node, compilationCtxtDescription));
         }
         node = nextNode;
       }
@@ -42,10 +42,10 @@ Object.defineProperty(CompilePipeline, "parameters", {get: function() {
     return [[assert.genericType(List, CompileStep)]];
   }});
 Object.defineProperty(CompilePipeline.prototype.process, "parameters", {get: function() {
-    return [[Element]];
+    return [[Element], [assert.type.string]];
   }});
 Object.defineProperty(CompilePipeline.prototype._process, "parameters", {get: function() {
-    return [[], [CompileElement], [CompileElement]];
+    return [[], [CompileElement], [CompileElement], [assert.type.string]];
   }});
 
 //# sourceMappingURL=/Users/patrick/Documents/open source/angular/modules/angular2/src/core/compiler/pipeline/compile_pipeline.map

@@ -39,15 +39,28 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/lang", "angular
     }],
     execute: function() {
       ViewSplitter = $__export("ViewSplitter", (function($__super) {
-        var ViewSplitter = function ViewSplitter(parser, compilationUnit) {
-          assert.argumentTypes(parser, Parser, compilationUnit, assert.type.any);
+        var ViewSplitter = function ViewSplitter(parser) {
+          assert.argumentTypes(parser, Parser);
           $traceurRuntime.superConstructor(ViewSplitter).call(this);
           this._parser = parser;
-          this._compilationUnit = compilationUnit;
         };
         return ($traceurRuntime.createClass)(ViewSplitter, {
           process: function(parent, current, control) {
             assert.argumentTypes(parent, CompileElement, current, CompileElement, control, CompileControl);
+            var attrs = current.attrs();
+            var templateBindings = MapWrapper.get(attrs, 'template');
+            var hasTemplateBinding = isPresent(templateBindings);
+            MapWrapper.forEach(attrs, (function(attrValue, attrName) {
+              if (StringWrapper.startsWith(attrName, '*')) {
+                var key = StringWrapper.substring(attrName, 1);
+                if (hasTemplateBinding) {
+                  throw new BaseException("Only one template directive per element is allowed: " + (templateBindings + " and " + key + " cannot be used simultaneously ") + ("in " + current.elementDescription));
+                } else {
+                  templateBindings = (attrValue.length == 0) ? key : key + ' ' + attrValue;
+                  hasTemplateBinding = true;
+                }
+              }
+            }));
             if (isBlank(parent)) {
               current.isViewRoot = true;
             } else {
@@ -57,26 +70,14 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/lang", "angular
                   var currentElement = assert.type(current.element, TemplateElement);
                   var viewRootElement = assert.type(viewRoot.element, TemplateElement);
                   this._moveChildNodes(DOM.content(currentElement), DOM.content(viewRootElement));
+                  viewRoot.elementDescription = current.elementDescription;
                   viewRoot.isViewRoot = true;
                   control.addChild(viewRoot);
                 }
               } else {
-                var attrs = current.attrs();
-                var templateBindings = MapWrapper.get(attrs, 'template');
-                var hasTemplateBinding = isPresent(templateBindings);
-                MapWrapper.forEach(attrs, (function(attrValue, attrName) {
-                  if (StringWrapper.startsWith(attrName, '*')) {
-                    var key = StringWrapper.substring(attrName, 1);
-                    if (hasTemplateBinding) {
-                      throw new BaseException("Only one template directive per element is allowed: " + (templateBindings + " and " + key + " cannot be used simultaneously!"));
-                    } else {
-                      templateBindings = (attrValue.length == 0) ? key : key + ' ' + attrValue;
-                      hasTemplateBinding = true;
-                    }
-                  }
-                }));
                 if (hasTemplateBinding) {
                   var newParent = new CompileElement(DOM.createTemplate(''));
+                  newParent.elementDescription = current.elementDescription;
                   current.isViewRoot = true;
                   this._parseTemplateBindings(templateBindings, newParent);
                   this._addParentElement(current.element, newParent.element);
@@ -99,7 +100,7 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/lang", "angular
           },
           _parseTemplateBindings: function(templateBindings, compileElement) {
             assert.argumentTypes(templateBindings, assert.type.string, compileElement, CompileElement);
-            var bindings = this._parser.parseTemplateBindings(templateBindings, this._compilationUnit);
+            var bindings = this._parser.parseTemplateBindings(templateBindings, compileElement.elementDescription);
             for (var i = 0; i < bindings.length; i++) {
               var binding = bindings[i];
               if (binding.keyIsVar) {
@@ -114,7 +115,7 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/lang", "angular
         }, {}, $__super);
       }(CompileStep)));
       Object.defineProperty(ViewSplitter, "parameters", {get: function() {
-          return [[Parser], [assert.type.any]];
+          return [[Parser]];
         }});
       Object.defineProperty(ViewSplitter.prototype.process, "parameters", {get: function() {
           return [[CompileElement], [CompileElement], [CompileControl]];

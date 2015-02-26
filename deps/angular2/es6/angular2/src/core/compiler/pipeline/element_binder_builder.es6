@@ -43,6 +43,7 @@ function ariaSetterFactory(attrName) {
 Object.defineProperty(ariaSetterFactory, "parameters", {get: function() {
     return [[assert.type.string]];
   }});
+const CLASS_ATTR = 'class';
 const CLASS_PREFIX = 'class.';
 var classSettersCache = StringMapWrapper.create();
 function classSetterFactory(className) {
@@ -64,6 +65,7 @@ function classSetterFactory(className) {
 Object.defineProperty(classSetterFactory, "parameters", {get: function() {
     return [[assert.type.string]];
   }});
+const STYLE_ATTR = 'style';
 const STYLE_PREFIX = 'style.';
 var styleSettersCache = StringMapWrapper.create();
 function styleSetterFactory(styleName, stylesuffix) {
@@ -103,12 +105,18 @@ function roleSetter(element, value) {
 Object.defineProperty(roleSetter, "parameters", {get: function() {
     return [[Element], []];
   }});
+export function isSpecialProperty(propName) {
+  assert.argumentTypes(propName, assert.type.string);
+  return StringWrapper.startsWith(propName, ARIA_PREFIX) || StringWrapper.startsWith(propName, CLASS_PREFIX) || StringWrapper.startsWith(propName, STYLE_PREFIX);
+}
+Object.defineProperty(isSpecialProperty, "parameters", {get: function() {
+    return [[assert.type.string]];
+  }});
 export class ElementBinderBuilder extends CompileStep {
-  constructor(parser, compilationUnit) {
-    assert.argumentTypes(parser, Parser, compilationUnit, assert.type.any);
+  constructor(parser) {
+    assert.argumentTypes(parser, Parser);
     super();
     this._parser = parser;
-    this._compilationUnit = compilationUnit;
   }
   process(parent, current, control) {
     assert.argumentTypes(parent, CompileElement, current, CompileElement, control, CompileControl);
@@ -182,7 +190,7 @@ export class ElementBinderBuilder extends CompileStep {
         if (isBlank(bindingAst)) {
           var attributeValue = MapWrapper.get(compileElement.attrs(), elProp);
           if (isPresent(attributeValue)) {
-            bindingAst = this._parser.wrapLiteralPrimitive(attributeValue, this._compilationUnit);
+            bindingAst = this._parser.wrapLiteralPrimitive(attributeValue, compileElement.elementDescription);
           }
         }
         if (isPresent(bindingAst)) {
@@ -198,7 +206,7 @@ export class ElementBinderBuilder extends CompileStep {
   }
 }
 Object.defineProperty(ElementBinderBuilder, "parameters", {get: function() {
-    return [[Parser], [assert.type.any]];
+    return [[Parser]];
   }});
 Object.defineProperty(ElementBinderBuilder.prototype.process, "parameters", {get: function() {
     return [[CompileElement], [CompileElement], [CompileControl]];

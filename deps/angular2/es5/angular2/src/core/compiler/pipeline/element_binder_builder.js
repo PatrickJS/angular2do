@@ -26,8 +26,10 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/lang", "angular
       DOT_REGEXP,
       ARIA_PREFIX,
       ariaSettersCache,
+      CLASS_ATTR,
       CLASS_PREFIX,
       classSettersCache,
+      STYLE_ATTR,
       STYLE_PREFIX,
       styleSettersCache,
       ROLE_ATTR,
@@ -94,6 +96,11 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/lang", "angular
       }
     }
   }
+  function isSpecialProperty(propName) {
+    assert.argumentTypes(propName, assert.type.string);
+    return StringWrapper.startsWith(propName, ARIA_PREFIX) || StringWrapper.startsWith(propName, CLASS_PREFIX) || StringWrapper.startsWith(propName, STYLE_PREFIX);
+  }
+  $__export("isSpecialProperty", isSpecialProperty);
   return {
     setters: [function($__m) {
       assert = $__m.assert;
@@ -136,11 +143,13 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/lang", "angular
       Object.defineProperty(ariaSetterFactory, "parameters", {get: function() {
           return [[assert.type.string]];
         }});
+      CLASS_ATTR = 'class';
       CLASS_PREFIX = 'class.';
       classSettersCache = StringMapWrapper.create();
       Object.defineProperty(classSetterFactory, "parameters", {get: function() {
           return [[assert.type.string]];
         }});
+      STYLE_ATTR = 'style';
       STYLE_PREFIX = 'style.';
       styleSettersCache = StringMapWrapper.create();
       Object.defineProperty(styleSetterFactory, "parameters", {get: function() {
@@ -150,12 +159,14 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/lang", "angular
       Object.defineProperty(roleSetter, "parameters", {get: function() {
           return [[Element], []];
         }});
+      Object.defineProperty(isSpecialProperty, "parameters", {get: function() {
+          return [[assert.type.string]];
+        }});
       ElementBinderBuilder = $__export("ElementBinderBuilder", (function($__super) {
-        var ElementBinderBuilder = function ElementBinderBuilder(parser, compilationUnit) {
-          assert.argumentTypes(parser, Parser, compilationUnit, assert.type.any);
+        var ElementBinderBuilder = function ElementBinderBuilder(parser) {
+          assert.argumentTypes(parser, Parser);
           $traceurRuntime.superConstructor(ElementBinderBuilder).call(this);
           this._parser = parser;
-          this._compilationUnit = compilationUnit;
         };
         return ($traceurRuntime.createClass)(ElementBinderBuilder, {
           process: function(parent, current, control) {
@@ -231,7 +242,7 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/lang", "angular
                 if (isBlank(bindingAst)) {
                   var attributeValue = MapWrapper.get(compileElement.attrs(), elProp);
                   if (isPresent(attributeValue)) {
-                    bindingAst = $__0._parser.wrapLiteralPrimitive(attributeValue, $__0._compilationUnit);
+                    bindingAst = $__0._parser.wrapLiteralPrimitive(attributeValue, compileElement.elementDescription);
                   }
                 }
                 if (isPresent(bindingAst)) {
@@ -250,7 +261,7 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/lang", "angular
         }, {}, $__super);
       }(CompileStep)));
       Object.defineProperty(ElementBinderBuilder, "parameters", {get: function() {
-          return [[Parser], [assert.type.any]];
+          return [[Parser]];
         }});
       Object.defineProperty(ElementBinderBuilder.prototype.process, "parameters", {get: function() {
           return [[CompileElement], [CompileElement], [CompileControl]];

@@ -117,10 +117,10 @@ System.register(["angular2/test_lib", "angular2/src/change_detection/pipes/keyva
         if (isJsObject({})) {
           describe('JsObject changes', (function() {
             it('should support JS Object', (function() {
-              expect(KeyValueChanges.supports({})).toBeTruthy();
-              expect(KeyValueChanges.supports("not supported")).toBeFalsy();
-              expect(KeyValueChanges.supports(0)).toBeFalsy();
-              expect(KeyValueChanges.supports(null)).toBeFalsy();
+              expect(KeyValueChanges.supportsObj({})).toBeTruthy();
+              expect(KeyValueChanges.supportsObj("not supported")).toBeFalsy();
+              expect(KeyValueChanges.supportsObj(0)).toBeFalsy();
+              expect(KeyValueChanges.supportsObj(null)).toBeFalsy();
             }));
             it('should do basic object watching', (function() {
               m = {};

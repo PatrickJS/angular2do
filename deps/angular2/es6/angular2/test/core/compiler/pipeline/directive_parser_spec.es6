@@ -6,7 +6,8 @@ import {describe,
   iit,
   ddescribe,
   el} from 'angular2/test_lib';
-import {isPresent} from 'angular2/src/facade/lang';
+import {isPresent,
+  assertionsEnabled} from 'angular2/src/facade/lang';
 import {ListWrapper,
   MapWrapper,
   StringMapWrapper} from 'angular2/src/facade/collection';
@@ -79,12 +80,12 @@ export function main() {
       it('should not allow multiple component directives on the same element', () => {
         expect(() => {
           createPipeline().process(el('<div some-comp some-comp2></div>'));
-        }).toThrowError('Only one component directive per element is allowed!');
+        }).toThrowError('Multiple component directives not allowed on the same element - check <div some-comp some-comp2>');
       });
       it('should not allow component directives on <template> elements', () => {
         expect(() => {
           createPipeline().process(el('<template some-comp></template>'));
-        }).toThrowError('Only template directives are allowed on <template> elements!');
+        }).toThrowError('Only template directives are allowed on template elements - check <template some-comp>');
       });
     });
     describe('viewport directives', () => {
@@ -105,12 +106,12 @@ export function main() {
       it('should not allow multiple viewport directives on the same element', () => {
         expect(() => {
           createPipeline().process(el('<template some-templ some-templ2></template>'));
-        }).toThrowError('Only one template directive per element is allowed!');
+        }).toThrowError('Only one viewport directive can be used per element - check <template some-templ some-templ2>');
       });
       it('should not allow viewport directives on non <template> elements', () => {
         expect(() => {
           createPipeline().process(el('<div some-templ></div>'));
-        }).toThrowError('Viewport directives need to be placed on <template> elements or elements with template attribute!');
+        }).toThrowError('Viewport directives need to be placed on <template> elements or elements with template attribute - check <div some-templ>');
       });
     });
     describe('decorator directives', () => {
@@ -135,11 +136,6 @@ export function main() {
         var pipeline = createPipeline({variableBindings: {'some-decor': 'someExpr'}});
         var results = pipeline.process(el('<div></div>'));
         expect(results[0].decoratorDirectives).toEqual([reader.read(SomeDecorator)]);
-      });
-      it('should not allow decorator directives on <template> elements', () => {
-        expect(() => {
-          createPipeline().process(el('<template some-decor></template>'));
-        }).toThrowError('Only template directives are allowed on <template> elements!');
       });
       it('should not instantiate decorator directive twice', () => {
         var pipeline = createPipeline({propertyBindings: {'some-decor-with-binding': 'someExpr'}});

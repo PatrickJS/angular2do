@@ -8,7 +8,9 @@ import {Element,
 import {int,
   isBlank,
   isPresent,
-  Type} from 'angular2/src/facade/lang';
+  Type,
+  StringJoiner,
+  assertionsEnabled} from 'angular2/src/facade/lang';
 import {DirectiveMetadata} from '../directive_metadata';
 import {Decorator,
   Component,
@@ -18,8 +20,8 @@ import {ProtoElementInjector} from '../element_injector';
 import {ProtoView} from '../view';
 import {AST} from 'angular2/change_detection';
 export class CompileElement {
-  constructor(element) {
-    assert.argumentTypes(element, Element);
+  constructor(element, compilationUnit = '') {
+    assert.argumentTypes(element, Element, compilationUnit, assert.type.any);
     this.element = element;
     this._attrs = null;
     this._classList = null;
@@ -39,6 +41,14 @@ export class CompileElement {
     this.distanceToParentInjector = 0;
     this.compileChildren = true;
     this.ignoreBindings = false;
+    var tplDesc = assertionsEnabled() ? getElementDescription(element) : null;
+    if (compilationUnit !== '') {
+      this.elementDescription = compilationUnit;
+      if (isPresent(tplDesc))
+        this.elementDescription += ": " + tplDesc;
+    } else {
+      this.elementDescription = tplDesc;
+    }
   }
   refreshAttrs() {
     this._attrs = null;
@@ -126,7 +136,7 @@ export class CompileElement {
   }
 }
 Object.defineProperty(CompileElement, "parameters", {get: function() {
-    return [[Element]];
+    return [[Element], []];
   }});
 Object.defineProperty(CompileElement.prototype.addTextNodeBinding, "parameters", {get: function() {
     return [[int], [AST]];
@@ -142,6 +152,38 @@ Object.defineProperty(CompileElement.prototype.addEventBinding, "parameters", {g
   }});
 Object.defineProperty(CompileElement.prototype.addDirective, "parameters", {get: function() {
     return [[DirectiveMetadata]];
+  }});
+function getElementDescription(domElement) {
+  assert.argumentTypes(domElement, Element);
+  var buf = new StringJoiner();
+  var atts = DOM.attributeMap(domElement);
+  buf.add("<");
+  buf.add(DOM.tagName(domElement).toLowerCase());
+  addDescriptionAttribute(buf, "id", MapWrapper.get(atts, "id"));
+  addDescriptionAttribute(buf, "class", MapWrapper.get(atts, "class"));
+  MapWrapper.forEach(atts, (attValue, attName) => {
+    if (attName !== "id" && attName !== "class") {
+      addDescriptionAttribute(buf, attName, attValue);
+    }
+  });
+  buf.add(">");
+  return assert.returnType((buf.toString()), assert.type.string);
+}
+Object.defineProperty(getElementDescription, "parameters", {get: function() {
+    return [[Element]];
+  }});
+function addDescriptionAttribute(buffer, attName, attValue) {
+  assert.argumentTypes(buffer, StringJoiner, attName, assert.type.string, attValue, assert.type.any);
+  if (isPresent(attValue)) {
+    if (attValue.length === 0) {
+      buffer.add(' ' + attName);
+    } else {
+      buffer.add(' ' + attName + '="' + attValue + '"');
+    }
+  }
+}
+Object.defineProperty(addDescriptionAttribute, "parameters", {get: function() {
+    return [[StringJoiner], [assert.type.string], []];
   }});
 
 //# sourceMappingURL=/Users/patrick/Documents/open source/angular/modules/angular2/src/core/compiler/pipeline/compile_element.map

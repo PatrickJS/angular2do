@@ -8,11 +8,10 @@ import {CompileStep} from './compile_step';
 import {CompileElement} from './compile_element';
 import {CompileControl} from './compile_control';
 export class TextInterpolationParser extends CompileStep {
-  constructor(parser, compilationUnit) {
-    assert.argumentTypes(parser, Parser, compilationUnit, assert.type.any);
+  constructor(parser) {
+    assert.argumentTypes(parser, Parser);
     super();
     this._parser = parser;
-    this._compilationUnit = compilationUnit;
   }
   process(parent, current, control) {
     assert.argumentTypes(parent, CompileElement, current, CompileElement, control, CompileControl);
@@ -29,7 +28,7 @@ export class TextInterpolationParser extends CompileStep {
     }
   }
   _parseTextNode(pipelineElement, node, nodeIndex) {
-    var ast = this._parser.parseInterpolation(DOM.nodeValue(node), this._compilationUnit);
+    var ast = this._parser.parseInterpolation(DOM.nodeValue(node), pipelineElement.elementDescription);
     if (isPresent(ast)) {
       DOM.setText(node, ' ');
       pipelineElement.addTextNodeBinding(nodeIndex, ast);
@@ -37,7 +36,7 @@ export class TextInterpolationParser extends CompileStep {
   }
 }
 Object.defineProperty(TextInterpolationParser, "parameters", {get: function() {
-    return [[Parser], [assert.type.any]];
+    return [[Parser]];
   }});
 Object.defineProperty(TextInterpolationParser.prototype.process, "parameters", {get: function() {
     return [[CompileElement], [CompileElement], [CompileControl]];

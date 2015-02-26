@@ -20,7 +20,7 @@ export function main() {
     function createPipeline(ignoreBindings = false) {
       return new CompilePipeline([new MockStep((parent, current, control) => {
         current.ignoreBindings = ignoreBindings;
-      }), new IgnoreChildrenStep(), new TextInterpolationParser(new Parser(new Lexer()), null)]);
+      }), new IgnoreChildrenStep(), new TextInterpolationParser(new Parser(new Lexer()))]);
     }
     it('should not look for text interpolation when ignoreBindings is true', () => {
       var results = createPipeline(true).process(el('<div>{{expr1}}<span></span>{{expr2}}</div>'));

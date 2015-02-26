@@ -23,7 +23,7 @@ System.register(["rtts_assert/rtts_assert", "angular2/test_lib", "angular2/src/c
         var ignoreBindings = arguments[0] !== (void 0) ? arguments[0] : false;
         return new CompilePipeline([new MockStep((function(parent, current, control) {
           current.ignoreBindings = ignoreBindings;
-        })), new PropertyBindingParser(new Parser(new Lexer()), null)]);
+        })), new PropertyBindingParser(new Parser(new Lexer()))]);
       }
       it('should not parse bindings when ignoreBindings is true', (function() {
         var results = createPipeline(true).process(el('<div [a]="b"></div>'));

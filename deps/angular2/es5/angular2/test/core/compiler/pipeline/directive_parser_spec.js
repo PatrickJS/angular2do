@@ -9,6 +9,7 @@ System.register(["rtts_assert/rtts_assert", "angular2/test_lib", "angular2/src/f
       ddescribe,
       el,
       isPresent,
+      assertionsEnabled,
       ListWrapper,
       MapWrapper,
       StringMapWrapper,
@@ -92,12 +93,12 @@ System.register(["rtts_assert/rtts_assert", "angular2/test_lib", "angular2/src/f
         it('should not allow multiple component directives on the same element', (function() {
           expect((function() {
             createPipeline().process(el('<div some-comp some-comp2></div>'));
-          })).toThrowError('Only one component directive per element is allowed!');
+          })).toThrowError('Multiple component directives not allowed on the same element - check <div some-comp some-comp2>');
         }));
         it('should not allow component directives on <template> elements', (function() {
           expect((function() {
             createPipeline().process(el('<template some-comp></template>'));
-          })).toThrowError('Only template directives are allowed on <template> elements!');
+          })).toThrowError('Only template directives are allowed on template elements - check <template some-comp>');
         }));
       }));
       describe('viewport directives', (function() {
@@ -118,12 +119,12 @@ System.register(["rtts_assert/rtts_assert", "angular2/test_lib", "angular2/src/f
         it('should not allow multiple viewport directives on the same element', (function() {
           expect((function() {
             createPipeline().process(el('<template some-templ some-templ2></template>'));
-          })).toThrowError('Only one template directive per element is allowed!');
+          })).toThrowError('Only one viewport directive can be used per element - check <template some-templ some-templ2>');
         }));
         it('should not allow viewport directives on non <template> elements', (function() {
           expect((function() {
             createPipeline().process(el('<div some-templ></div>'));
-          })).toThrowError('Viewport directives need to be placed on <template> elements or elements with template attribute!');
+          })).toThrowError('Viewport directives need to be placed on <template> elements or elements with template attribute - check <div some-templ>');
         }));
       }));
       describe('decorator directives', (function() {
@@ -149,11 +150,6 @@ System.register(["rtts_assert/rtts_assert", "angular2/test_lib", "angular2/src/f
           var results = pipeline.process(el('<div></div>'));
           expect(results[0].decoratorDirectives).toEqual([reader.read(SomeDecorator)]);
         }));
-        it('should not allow decorator directives on <template> elements', (function() {
-          expect((function() {
-            createPipeline().process(el('<template some-decor></template>'));
-          })).toThrowError('Only template directives are allowed on <template> elements!');
-        }));
         it('should not instantiate decorator directive twice', (function() {
           var pipeline = createPipeline({propertyBindings: {'some-decor-with-binding': 'someExpr'}});
           var results = pipeline.process(el('<div some-decor-with-binding="foo"></div>'));
@@ -177,6 +173,7 @@ System.register(["rtts_assert/rtts_assert", "angular2/test_lib", "angular2/src/f
       el = $__m.el;
     }, function($__m) {
       isPresent = $__m.isPresent;
+      assertionsEnabled = $__m.assertionsEnabled;
     }, function($__m) {
       ListWrapper = $__m.ListWrapper;
       MapWrapper = $__m.MapWrapper;

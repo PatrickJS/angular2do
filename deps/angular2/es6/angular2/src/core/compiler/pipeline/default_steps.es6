@@ -16,17 +16,15 @@ import {ShimShadowDom} from './shim_shadow_dom';
 import {DirectiveMetadata} from 'angular2/src/core/compiler/directive_metadata';
 import {ShadowDomStrategy,
   EmulatedShadowDomStrategy} from 'angular2/src/core/compiler/shadow_dom_strategy';
-import {stringify} from 'angular2/src/facade/lang';
 import {DOM} from 'angular2/src/facade/dom';
 export function createDefaultSteps(changeDetection, parser, compiledComponent, directives, shadowDomStrategy) {
   assert.argumentTypes(changeDetection, ChangeDetection, parser, Parser, compiledComponent, DirectiveMetadata, directives, assert.genericType(List, DirectiveMetadata), shadowDomStrategy, ShadowDomStrategy);
-  var compilationUnit = stringify(compiledComponent.type);
-  var steps = [new ViewSplitter(parser, compilationUnit)];
+  var steps = [new ViewSplitter(parser)];
   if (shadowDomStrategy instanceof EmulatedShadowDomStrategy) {
     var step = new ShimShadowCss(compiledComponent, shadowDomStrategy, DOM.defaultDoc().head);
     ListWrapper.push(steps, step);
   }
-  steps = ListWrapper.concat(steps, [new PropertyBindingParser(parser, compilationUnit), new DirectiveParser(directives), new TextInterpolationParser(parser, compilationUnit), new ElementBindingMarker(), new ProtoViewBuilder(changeDetection, shadowDomStrategy), new ProtoElementInjectorBuilder(), new ElementBinderBuilder(parser, compilationUnit)]);
+  steps = ListWrapper.concat(steps, [new PropertyBindingParser(parser), new DirectiveParser(directives), new TextInterpolationParser(parser), new ElementBindingMarker(), new ProtoViewBuilder(changeDetection, shadowDomStrategy), new ProtoElementInjectorBuilder(), new ElementBinderBuilder(parser)]);
   if (shadowDomStrategy instanceof EmulatedShadowDomStrategy) {
     var step = new ShimShadowDom(compiledComponent, shadowDomStrategy);
     ListWrapper.push(steps, step);

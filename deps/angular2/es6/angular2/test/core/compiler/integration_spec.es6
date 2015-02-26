@@ -8,6 +8,11 @@ import {describe,
   iit,
   el} from 'angular2/test_lib';
 import {DOM} from 'angular2/src/facade/dom';
+import {Type,
+  isPresent,
+  BaseException} from 'angular2/src/facade/lang';
+import {assertionsEnabled,
+  isJsObject} from 'angular2/src/facade/lang';
 import {Injector} from 'angular2/di';
 import {Lexer,
   Parser,
@@ -282,6 +287,32 @@ export function main() {
         });
       });
     });
+    if (assertionsEnabled() && isJsObject({})) {
+      function expectCompileError(inlineTpl, errMessage, done) {
+        tplResolver.setTemplate(MyComp, new Template({inline: inlineTpl}));
+        compiler.compile(MyComp).then(() => {
+          throw new BaseException("Test failure: should not have come here as an exception was expected");
+        }, (err) => {
+          expect(err.message).toBe(errMessage);
+          done();
+        });
+      }
+      it('should raise an error if no directive is registered for an unsupported DOM property', (done) => {
+        expectCompileError('<div [some-prop]="foo"></div>', 'Missing directive to handle \'some-prop\' in MyComp: <div [some-prop]="foo">', done);
+      });
+      it('should raise an error if no directive is registered for a template with template bindings', (done) => {
+        expectCompileError('<div><div template="if: foo"></div></div>', 'Missing directive to handle \'if\' in <div template="if: foo">', done);
+      });
+      it('should raise an error for missing template directive (1)', (done) => {
+        expectCompileError('<div><template foo></template></div>', 'Missing directive to handle: <template foo>', done);
+      });
+      it('should raise an error for missing template directive (2)', (done) => {
+        expectCompileError('<div><template *if="condition"></template></div>', 'Missing directive to handle: <template *if="condition">', done);
+      });
+      it('should raise an error for missing template directive (3)', (done) => {
+        expectCompileError('<div *if="condition"></div>', 'Missing directive to handle \'if\' in MyComp: <div *if="condition">', done);
+      });
+    }
   });
 }
 class MyDir {
@@ -383,6 +414,22 @@ Object.defineProperty(CompWithAncestor, "annotations", {get: function() {
   }});
 Object.defineProperty(CompWithAncestor, "parameters", {get: function() {
     return [[SomeDirective, new Ancestor()]];
+  }});
+class ChildComp2 {
+  constructor(service) {
+    assert.argumentTypes(service, MyService);
+    this.ctxProp = service.greeting;
+    this.dirProp = null;
+  }
+}
+Object.defineProperty(ChildComp2, "annotations", {get: function() {
+    return [new Component({
+      selector: '[child-cmp2]',
+      componentServices: [MyService]
+    })];
+  }});
+Object.defineProperty(ChildComp2, "parameters", {get: function() {
+    return [[MyService]];
   }});
 class SomeViewport {
   constructor(container) {
