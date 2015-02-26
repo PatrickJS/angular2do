@@ -127,19 +127,19 @@
     <li>
       <a href="https://gdi2290.net/angular2do/#/"
         (click)="changeFilter('all', $event)"
-        [class.selected]="currentFilter == 'all'"
+        [class.selected]="todoService.currentFilter == 'all'"
       >All</a>
     </li>
     <li>
       <a href="https://gdi2290.net/angular2do/#/active"
         (click)="changeFilter('active', $event)"
-        [class.selected]="currentFilter == 'active'"
+        [class.selected]="todoService.currentFilter == 'active'"
       >Active</a>
     </li>
     <li>
       <a href="https://gdi2290.net/angular2do/#/completed"
         (click)="changeFilter('completed', $event)"
-        [class.selected]="currentFilter == 'completed'"
+        [class.selected]="todoService.currentFilter == 'completed'"
       >Completed</a>
     </li>
   </ul>
