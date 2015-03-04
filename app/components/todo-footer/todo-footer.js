@@ -19,8 +19,6 @@ export class TodoFooter {
 
     this.todoService = todoService;
     // TODO: location service
-    this.currentFilter = location.hash.replace('#/', '') || 'all';
-    this.changeFilter(this.currentFilter);
 
   }
 
@@ -34,19 +32,10 @@ export class TodoFooter {
   }
 
   changeFilter(filter = 'all', $event) {
-    if ($event && $event.preventDefault) {
-      $event.preventDefault();
-    }
-
-    if (filter === 'all') {
-      this.todoService.filterList((todo) => true);
-    } else if (filter === 'completed') {
-      this.todoService.filterList((todo) => todo.completed);
-    } else if (filter === 'active') {
-      this.todoService.filterList((todo) => !todo.completed);
-    }
-
-    this.currentFilter = filter;
+    // if ($event && $event.preventDefault) {
+    //   $event.preventDefault();
+    // }
+    this.todoService.filterList(filter);
   }
 
 }

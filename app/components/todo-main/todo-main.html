@@ -193,13 +193,14 @@
 
 <section [hidden]="todoService.count == 0">
   <ul>
+      <!-- template="foreach: #todo in todoService.list | filter[todoService.currentFilter]" -->
     <li
-      template="foreach: #todo in getList()"
-      [class.editing]="todoService.state.editing == todo"
+      template="foreach: #todo in filter(todoService.list, todoService.currentFilter)"
+      [class.editing]="todoService.editing == todo"
       [class.completed]="todo.completed == true"
     >
       <input type="checkbox"
-        [hidden]="todoService.state.editing == todo"
+        [hidden]="todoService.editing == todo"
         [checked]="todo.completed == true"
         (click)="toggleComplete(todo)"
       />

@@ -419,7 +419,7 @@ System.register(["angular2/src/facade/lang", "angular2/src/facade/dom", "angular
       "factory": (function(exHandler, cd) {
         return new LifeCycle(exHandler, cd);
       }),
-      "parameters": [[ExceptionHandler, ChangeDetector]],
+      "parameters": [[ExceptionHandler], [ChangeDetector]],
       "annotations": []
     });
     reflector.registerType(ShadowDomStrategy, {

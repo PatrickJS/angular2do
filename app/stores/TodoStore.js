@@ -1,6 +1,5 @@
 import {isPresent} from 'angular2/src/facade/lang';
 
-
 // Closure
 var state = {
   list: [
@@ -20,10 +19,11 @@ var state = {
       completed: false
     }
   ],
-  filter: todo => todo,
   currentFilter: 'all',
   editing: null
 };
+// default filter from Hash
+state.currentFilter = location.hash.replace('#/', '') || 'all';
 
 function setState(newState) {
   console.log('SET State');
@@ -33,16 +33,31 @@ function setState(newState) {
 
 export class TodoStore {
   constructor() {
-    // console.log('TodoStore');
-    this.state = state;
+    console.log('TodoStore');
   }
-
+  get currentFilter() {
+    // Immutable
+    return state.currentFilter+'';
+  }
+  set currentFilter(val) {
+    // Immutable
+    // return val;
+  }
+  get editing() {
+    // Immutable
+    return state.editing;
+  }
+  set editing(val) {
+    // Immutable
+    // return val;
+  }
   get list() {
     // Immutable
-    return this.state.list.slice(0);
+    return state.list.slice(0);
   }
   set list(val) {
     // Immutable
+    // return val;
   }
 
   get count() {
@@ -55,22 +70,18 @@ export class TodoStore {
     return this.list.filter(function(todo) { return todo.completed; }.bind(this)).length;
   }
 
-  getFilteredList() {
-    return this.list.filter(this.state.filter);
-  }
-
   toggleComplete(todo) {
     todo.completed = !todo.completed;
     this.update(todo);
   }
 
-  filterList(func) {
+  filterList(type = this.currentFilter) {
     setState({
-      filter: func || this.filter
+      currentFilter: type
     });
   }
 
-  editing(todo = null) {
+  editingTodo(todo = null) {
     setState({
       editing: todo
     });

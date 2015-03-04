@@ -13,7 +13,8 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/collection", "a
       _EMPTY_ATTR_VALUE,
       _SELECTOR_REGEXP,
       CssSelector,
-      SelectorMatcher;
+      SelectorMatcher,
+      SelectorContext;
   return {
     setters: [function($__m) {
       assert = $__m.assert;
@@ -126,12 +127,13 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/collection", "a
           this._attrValuePartialMap = MapWrapper.create();
         };
         return ($traceurRuntime.createClass)(SelectorMatcher, {
-          addSelectable: function(cssSelector, selectable) {
-            assert.argumentTypes(cssSelector, CssSelector, selectable, assert.type.any);
+          addSelectable: function(cssSelector, callbackCtxt) {
+            assert.argumentTypes(cssSelector, CssSelector, callbackCtxt, assert.type.any);
             var matcher = this;
             var element = cssSelector.element;
             var classNames = cssSelector.classNames;
             var attrs = cssSelector.attrs;
+            var selectable = new SelectorContext(cssSelector, callbackCtxt);
             if (isPresent(element)) {
               var isTerminal = attrs.length === 0 && classNames.length === 0;
               if (isTerminal) {
@@ -228,8 +230,10 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/collection", "a
             if (isBlank(selectables)) {
               return ;
             }
+            var selectable;
             for (var index = 0; index < selectables.length; index++) {
-              matchedCallback(selectables[index]);
+              selectable = selectables[index];
+              matchedCallback(selectable.selector, selectable.cbContext);
             }
           },
           _matchPartial: function() {
@@ -266,6 +270,17 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/collection", "a
         }});
       Object.defineProperty(SelectorMatcher.prototype._matchPartial, "parameters", {get: function() {
           return [[assert.genericType(Map, assert.type.string, assert.type.string)], [], [], []];
+        }});
+      SelectorContext = (function() {
+        var SelectorContext = function SelectorContext(selector, cbContext) {
+          assert.argumentTypes(selector, CssSelector, cbContext, assert.type.any);
+          this.selector = selector;
+          this.cbContext = cbContext;
+        };
+        return ($traceurRuntime.createClass)(SelectorContext, {}, {});
+      }());
+      Object.defineProperty(SelectorContext, "parameters", {get: function() {
+          return [[CssSelector], []];
         }});
     }
   };

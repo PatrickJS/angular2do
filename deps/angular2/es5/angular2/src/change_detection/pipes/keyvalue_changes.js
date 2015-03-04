@@ -1,4 +1,4 @@
-System.register(["rtts_assert/rtts_assert", "angular2/src/facade/collection", "angular2/src/facade/lang"], function($__export) {
+System.register(["rtts_assert/rtts_assert", "angular2/src/facade/collection", "angular2/src/facade/lang", "./pipe"], function($__export) {
   "use strict";
   var assert,
       ListWrapper,
@@ -7,6 +7,9 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/collection", "a
       stringify,
       looseIdentical,
       isJsObject,
+      NO_CHANGE,
+      Pipe,
+      KeyValueChangesFactory,
       KeyValueChanges,
       KVChangeRecord;
   return {
@@ -20,10 +23,25 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/collection", "a
       stringify = $__m.stringify;
       looseIdentical = $__m.looseIdentical;
       isJsObject = $__m.isJsObject;
+    }, function($__m) {
+      NO_CHANGE = $__m.NO_CHANGE;
+      Pipe = $__m.Pipe;
     }],
     execute: function() {
-      KeyValueChanges = $__export("KeyValueChanges", (function() {
+      KeyValueChangesFactory = $__export("KeyValueChangesFactory", (function() {
+        var KeyValueChangesFactory = function KeyValueChangesFactory() {};
+        return ($traceurRuntime.createClass)(KeyValueChangesFactory, {
+          supports: function(obj) {
+            return assert.returnType((KeyValueChanges.supportsObj(obj)), assert.type.boolean);
+          },
+          create: function() {
+            return assert.returnType((new KeyValueChanges()), Pipe);
+          }
+        }, {});
+      }()));
+      KeyValueChanges = $__export("KeyValueChanges", (function($__super) {
         var KeyValueChanges = function KeyValueChanges() {
+          $traceurRuntime.superConstructor(KeyValueChanges).call(this);
           this._records = MapWrapper.create();
           this._mapHead = null;
           this._previousMapHead = null;
@@ -35,8 +53,15 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/collection", "a
           this._removalsTail = null;
         };
         return ($traceurRuntime.createClass)(KeyValueChanges, {
-          supportsObj: function(obj) {
-            return assert.returnType((KeyValueChanges.supports(obj)), assert.type.boolean);
+          supports: function(obj) {
+            return assert.returnType((KeyValueChanges.supportsObj(obj)), assert.type.boolean);
+          },
+          transform: function(map) {
+            if (this.check(map)) {
+              return this;
+            } else {
+              return NO_CHANGE;
+            }
           },
           get isDirty() {
             return assert.returnType((this._additionsHead !== null || this._changesHead !== null || this._removalsHead !== null), assert.type.boolean);
@@ -251,10 +276,10 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/collection", "a
               StringMapWrapper.forEach(obj, fn);
             }
           }
-        }, {supports: function(obj) {
+        }, {supportsObj: function(obj) {
             return assert.returnType((obj instanceof Map || isJsObject(obj)), assert.type.boolean);
-          }});
-      }()));
+          }}, $__super);
+      }(Pipe)));
       Object.defineProperty(KeyValueChanges.prototype.forEachItem, "parameters", {get: function() {
           return [[Function]];
         }});

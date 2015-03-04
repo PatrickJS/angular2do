@@ -1,9 +1,12 @@
 import {assert} from "rtts_assert/rtts_assert";
 import {isPresent,
   isBlank,
-  BaseException} from 'angular2/src/facade/lang';
+  BaseException,
+  assertionsEnabled,
+  RegExpWrapper} from 'angular2/src/facade/lang';
 import {List,
-  MapWrapper} from 'angular2/src/facade/collection';
+  MapWrapper,
+  StringMapWrapper} from 'angular2/src/facade/collection';
 import {DOM} from 'angular2/src/facade/dom';
 import {SelectorMatcher} from '../selector';
 import {CssSelector} from '../selector';
@@ -13,14 +16,19 @@ import {Component,
 import {CompileStep} from './compile_step';
 import {CompileElement} from './compile_element';
 import {CompileControl} from './compile_control';
+import {isSpecialProperty} from './element_binder_builder';
+;
+var PROPERTY_BINDING_REGEXP = RegExpWrapper.create('^ *([^\\s\\|]+)');
 export class DirectiveParser extends CompileStep {
   constructor(directives) {
     assert.argumentTypes(directives, assert.genericType(List, DirectiveMetadata));
     super();
+    var selector;
     this._selectorMatcher = new SelectorMatcher();
     for (var i = 0; i < directives.length; i++) {
       var directiveMetadata = directives[i];
-      this._selectorMatcher.addSelectable(CssSelector.parse(directiveMetadata.annotation.selector), directiveMetadata);
+      selector = CssSelector.parse(directiveMetadata.annotation.selector);
+      this._selectorMatcher.addSelectable(selector, directiveMetadata);
     }
   }
   process(parent, current, control) {
@@ -48,20 +56,13 @@ export class DirectiveParser extends CompileStep {
       });
     }
     var isTemplateElement = DOM.isTemplateElement(current.element);
-    this._selectorMatcher.match(cssSelector, (directive) => {
-      if (directive.annotation instanceof Viewport) {
-        if (!isTemplateElement) {
-          throw new BaseException('Viewport directives need to be placed on <template> elements or elements with template attribute!');
-        } else if (isPresent(current.viewportDirective)) {
-          throw new BaseException('Only one template directive per element is allowed!');
-        }
-      } else if (isTemplateElement) {
-        throw new BaseException('Only template directives are allowed on <template> elements!');
-      } else if ((directive.annotation instanceof Component) && isPresent(current.componentDirective)) {
-        throw new BaseException('Only one component directive per element is allowed!');
-      }
+    var matchedProperties;
+    this._selectorMatcher.match(cssSelector, (selector, directive) => {
+      matchedProperties = updateMatchedProperties(matchedProperties, selector, directive);
+      checkDirectiveValidity(directive, current, isTemplateElement);
       current.addDirective(directive);
     });
+    checkMissingDirectives(current, matchedProperties, isTemplateElement);
   }
 }
 Object.defineProperty(DirectiveParser, "parameters", {get: function() {
@@ -70,6 +71,59 @@ Object.defineProperty(DirectiveParser, "parameters", {get: function() {
 Object.defineProperty(DirectiveParser.prototype.process, "parameters", {get: function() {
     return [[CompileElement], [CompileElement], [CompileControl]];
   }});
+function updateMatchedProperties(matchedProperties, selector, directive) {
+  if (assertionsEnabled()) {
+    var attrs = selector.attrs;
+    if (!isPresent(matchedProperties)) {
+      matchedProperties = StringMapWrapper.create();
+    }
+    if (isPresent(attrs)) {
+      for (var idx = 0; idx < attrs.length; idx += 2) {
+        StringMapWrapper.set(matchedProperties, attrs[idx], true);
+      }
+    }
+    if (isPresent(directive.annotation) && isPresent(directive.annotation.bind)) {
+      var bindMap = directive.annotation.bind;
+      StringMapWrapper.forEach(bindMap, (value, key) => {
+        var bindProp = RegExpWrapper.firstMatch(PROPERTY_BINDING_REGEXP, value);
+        if (isPresent(bindProp) && isPresent(bindProp[1])) {
+          StringMapWrapper.set(matchedProperties, bindProp[1], true);
+        }
+      });
+    }
+  }
+  return matchedProperties;
+}
+function checkDirectiveValidity(directive, current, isTemplateElement) {
+  if (directive.annotation instanceof Viewport) {
+    if (!isTemplateElement) {
+      throw new BaseException(`Viewport directives need to be placed on <template> elements or elements ` + `with template attribute - check ${current.elementDescription}`);
+    } else if (isPresent(current.viewportDirective)) {
+      throw new BaseException(`Only one viewport directive can be used per element - check ${current.elementDescription}`);
+    }
+  } else if (isTemplateElement) {
+    throw new BaseException(`Only template directives are allowed on template elements - check ${current.elementDescription}`);
+  } else if ((directive.annotation instanceof Component) && isPresent(current.componentDirective)) {
+    throw new BaseException(`Multiple component directives not allowed on the same element - check ${current.elementDescription}`);
+  }
+}
+function checkMissingDirectives(current, matchedProperties, isTemplateElement) {
+  if (assertionsEnabled()) {
+    var ppBindings = current.propertyBindings;
+    if (isPresent(ppBindings)) {
+      MapWrapper.forEach(ppBindings, (expression, prop) => {
+        if (!DOM.hasProperty(current.element, prop) && !isSpecialProperty(prop)) {
+          if (!isPresent(matchedProperties) || !isPresent(StringMapWrapper.get(matchedProperties, prop))) {
+            throw new BaseException(`Missing directive to handle '${prop}' in ${current.elementDescription}`);
+          }
+        }
+      });
+    }
+    if (isTemplateElement && !current.isViewRoot && !isPresent(current.viewportDirective)) {
+      throw new BaseException(`Missing directive to handle: ${current.elementDescription}`);
+    }
+  }
+}
 
 //# sourceMappingURL=/Users/patrick/Documents/open source/angular/modules/angular2/src/core/compiler/pipeline/directive_parser.map
 

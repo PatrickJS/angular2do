@@ -24,15 +24,30 @@ export class TodoMain {
 
   constructor(todoService: TodoStore) {
     this.todoService = todoService;
+    this.filterBy = {
+      'all': this.filterAll,
+      'active': this.filterActive,
+      'completed': this.filterCompleted
+    }
   }
 
-  getList() {
-    // TODO: filter list
-    return this.todoService.getFilteredList();
+  filterAll(todo) {
+    return todo;
+  }
+  filterActive(todo) {
+    return !todo.completed
+  }
+  filterCompleted(todo) {
+    return todo.completed;
+  }
+
+  filter(list, current) {
+    // TODO: filter list in template via pipe
+    return list.filter(this.filterBy[current]);
   }
 
   editTodo(todo) {
-    this.todoService.editing(todo);
+    this.todoService.editingTodo(todo);
   }
 
   toggleComplete(todo) {

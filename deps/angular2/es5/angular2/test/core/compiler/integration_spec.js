@@ -1,4 +1,4 @@
-System.register(["rtts_assert/rtts_assert", "angular2/test_lib", "angular2/src/facade/dom", "angular2/di", "angular2/change_detection", "angular2/src/core/compiler/compiler", "angular2/src/core/compiler/directive_metadata_reader", "angular2/src/core/compiler/shadow_dom_strategy", "angular2/src/core/compiler/template_loader", "angular2/src/mock/template_resolver_mock", "angular2/src/core/compiler/binding_propagation_config", "angular2/src/core/annotations/annotations", "angular2/src/core/annotations/template", "angular2/src/core/annotations/visibility", "angular2/src/core/compiler/view_container"], function($__export) {
+System.register(["rtts_assert/rtts_assert", "angular2/test_lib", "angular2/src/facade/dom", "angular2/src/facade/lang", "angular2/di", "angular2/change_detection", "angular2/src/core/compiler/compiler", "angular2/src/core/compiler/directive_metadata_reader", "angular2/src/core/compiler/shadow_dom_strategy", "angular2/src/core/compiler/template_loader", "angular2/src/mock/template_resolver_mock", "angular2/src/core/compiler/binding_propagation_config", "angular2/src/core/annotations/annotations", "angular2/src/core/annotations/template", "angular2/src/core/annotations/visibility", "angular2/src/core/compiler/view_container"], function($__export) {
   "use strict";
   var assert,
       describe,
@@ -10,6 +10,11 @@ System.register(["rtts_assert/rtts_assert", "angular2/test_lib", "angular2/src/f
       iit,
       el,
       DOM,
+      Type,
+      isPresent,
+      BaseException,
+      assertionsEnabled,
+      isJsObject,
       Injector,
       Lexer,
       Parser,
@@ -40,6 +45,7 @@ System.register(["rtts_assert/rtts_assert", "angular2/test_lib", "angular2/src/f
       SomeDirective,
       CompWithParent,
       CompWithAncestor,
+      ChildComp2,
       SomeViewport,
       MyService,
       DoublePipe,
@@ -291,6 +297,32 @@ System.register(["rtts_assert/rtts_assert", "angular2/test_lib", "angular2/src/f
           }));
         }));
       });
+      if (assertionsEnabled() && isJsObject({})) {
+        var expectCompileError = function(inlineTpl, errMessage, done) {
+          tplResolver.setTemplate(MyComp, new Template({inline: inlineTpl}));
+          compiler.compile(MyComp).then((function() {
+            throw new BaseException("Test failure: should not have come here as an exception was expected");
+          }), (function(err) {
+            expect(err.message).toBe(errMessage);
+            done();
+          }));
+        };
+        it('should raise an error if no directive is registered for an unsupported DOM property', (function(done) {
+          expectCompileError('<div [some-prop]="foo"></div>', 'Missing directive to handle \'some-prop\' in MyComp: <div [some-prop]="foo">', done);
+        }));
+        it('should raise an error if no directive is registered for a template with template bindings', (function(done) {
+          expectCompileError('<div><div template="if: foo"></div></div>', 'Missing directive to handle \'if\' in <div template="if: foo">', done);
+        }));
+        it('should raise an error for missing template directive (1)', (function(done) {
+          expectCompileError('<div><template foo></template></div>', 'Missing directive to handle: <template foo>', done);
+        }));
+        it('should raise an error for missing template directive (2)', (function(done) {
+          expectCompileError('<div><template *if="condition"></template></div>', 'Missing directive to handle: <template *if="condition">', done);
+        }));
+        it('should raise an error for missing template directive (3)', (function(done) {
+          expectCompileError('<div *if="condition"></div>', 'Missing directive to handle \'if\' in MyComp: <div *if="condition">', done);
+        }));
+      }
     });
   }
   $__export("main", main);
@@ -308,6 +340,12 @@ System.register(["rtts_assert/rtts_assert", "angular2/test_lib", "angular2/src/f
       el = $__m.el;
     }, function($__m) {
       DOM = $__m.DOM;
+    }, function($__m) {
+      Type = $__m.Type;
+      isPresent = $__m.isPresent;
+      BaseException = $__m.BaseException;
+      assertionsEnabled = $__m.assertionsEnabled;
+      isJsObject = $__m.isJsObject;
     }, function($__m) {
       Injector = $__m.Injector;
     }, function($__m) {
@@ -456,6 +494,23 @@ System.register(["rtts_assert/rtts_assert", "angular2/test_lib", "angular2/src/f
         }});
       Object.defineProperty(CompWithAncestor, "parameters", {get: function() {
           return [[SomeDirective, new Ancestor()]];
+        }});
+      ChildComp2 = (function() {
+        var ChildComp2 = function ChildComp2(service) {
+          assert.argumentTypes(service, MyService);
+          this.ctxProp = service.greeting;
+          this.dirProp = null;
+        };
+        return ($traceurRuntime.createClass)(ChildComp2, {}, {});
+      }());
+      Object.defineProperty(ChildComp2, "annotations", {get: function() {
+          return [new Component({
+            selector: '[child-cmp2]',
+            componentServices: [MyService]
+          })];
+        }});
+      Object.defineProperty(ChildComp2, "parameters", {get: function() {
+          return [[MyService]];
         }});
       SomeViewport = (function() {
         var SomeViewport = function SomeViewport(container) {

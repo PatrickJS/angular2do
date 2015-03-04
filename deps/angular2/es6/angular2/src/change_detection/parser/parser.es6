@@ -480,7 +480,7 @@ class _ParseAST {
           }
         } else if (!this.peekKeywordVar()) {
           var start = this.inputIndex;
-          var ast = this.parseExpression();
+          var ast = this.parsePipe();
           var source = this.input.substring(start, this.inputIndex);
           expression = new ASTWithSource(ast, source, this.location);
         }

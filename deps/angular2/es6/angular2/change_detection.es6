@@ -14,6 +14,7 @@ import {ProtoChangeDetector,
   JitProtoChangeDetector} from './src/change_detection/proto_change_detector';
 import {PipeRegistry} from './src/change_detection/pipes/pipe_registry';
 import {ArrayChangesFactory} from './src/change_detection/pipes/array_changes';
+import {KeyValueChangesFactory} from './src/change_detection/pipes/keyvalue_changes';
 import {NullPipeFactory} from './src/change_detection/pipes/null_pipe';
 export class ChangeDetection {
   createProtoChangeDetector(name) {
@@ -24,7 +25,10 @@ export class ChangeDetection {
 Object.defineProperty(ChangeDetection.prototype.createProtoChangeDetector, "parameters", {get: function() {
     return [[assert.type.string]];
   }});
-export var defaultPipes = {"iterableDiff": [new ArrayChangesFactory(), new NullPipeFactory()]};
+export var defaultPipes = {
+  "iterableDiff": [new ArrayChangesFactory(), new NullPipeFactory()],
+  "keyValDiff": [new KeyValueChangesFactory(), new NullPipeFactory()]
+};
 export class DynamicChangeDetection extends ChangeDetection {
   constructor(registry) {
     assert.argumentTypes(registry, PipeRegistry);

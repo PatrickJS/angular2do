@@ -30,11 +30,10 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/lang", "angular
     }],
     execute: function() {
       TextInterpolationParser = $__export("TextInterpolationParser", (function($__super) {
-        var TextInterpolationParser = function TextInterpolationParser(parser, compilationUnit) {
-          assert.argumentTypes(parser, Parser, compilationUnit, assert.type.any);
+        var TextInterpolationParser = function TextInterpolationParser(parser) {
+          assert.argumentTypes(parser, Parser);
           $traceurRuntime.superConstructor(TextInterpolationParser).call(this);
           this._parser = parser;
-          this._compilationUnit = compilationUnit;
         };
         return ($traceurRuntime.createClass)(TextInterpolationParser, {
           process: function(parent, current, control) {
@@ -52,7 +51,7 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/lang", "angular
             }
           },
           _parseTextNode: function(pipelineElement, node, nodeIndex) {
-            var ast = this._parser.parseInterpolation(DOM.nodeValue(node), this._compilationUnit);
+            var ast = this._parser.parseInterpolation(DOM.nodeValue(node), pipelineElement.elementDescription);
             if (isPresent(ast)) {
               DOM.setText(node, ' ');
               pipelineElement.addTextNodeBinding(nodeIndex, ast);
@@ -61,7 +60,7 @@ System.register(["rtts_assert/rtts_assert", "angular2/src/facade/lang", "angular
         }, {}, $__super);
       }(CompileStep)));
       Object.defineProperty(TextInterpolationParser, "parameters", {get: function() {
-          return [[Parser], [assert.type.any]];
+          return [[Parser]];
         }});
       Object.defineProperty(TextInterpolationParser.prototype.process, "parameters", {get: function() {
           return [[CompileElement], [CompileElement], [CompileControl]];

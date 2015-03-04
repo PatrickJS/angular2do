@@ -116,7 +116,7 @@ System.register(["./index_common", "angular2/angular2", "angular2/change_detecti
       "factory": (function(exHandler, cd) {
         return new LifeCycle(exHandler, cd);
       }),
-      "parameters": [[ExceptionHandler, ChangeDetector]],
+      "parameters": [[ExceptionHandler], [ChangeDetector]],
       "annotations": []
     });
     reflector.registerType(ShadowDomStrategy, {

@@ -5,8 +5,19 @@ import {ListWrapper,
 import {stringify,
   looseIdentical,
   isJsObject} from 'angular2/src/facade/lang';
-export class KeyValueChanges {
+import {NO_CHANGE,
+  Pipe} from './pipe';
+export class KeyValueChangesFactory {
+  supports(obj) {
+    return assert.returnType((KeyValueChanges.supportsObj(obj)), assert.type.boolean);
+  }
+  create() {
+    return assert.returnType((new KeyValueChanges()), Pipe);
+  }
+}
+export class KeyValueChanges extends Pipe {
   constructor() {
+    super();
     this._records = MapWrapper.create();
     this._mapHead = null;
     this._previousMapHead = null;
@@ -17,11 +28,18 @@ export class KeyValueChanges {
     this._removalsHead = null;
     this._removalsTail = null;
   }
-  static supports(obj) {
+  static supportsObj(obj) {
     return assert.returnType((obj instanceof Map || isJsObject(obj)), assert.type.boolean);
   }
-  supportsObj(obj) {
-    return assert.returnType((KeyValueChanges.supports(obj)), assert.type.boolean);
+  supports(obj) {
+    return assert.returnType((KeyValueChanges.supportsObj(obj)), assert.type.boolean);
+  }
+  transform(map) {
+    if (this.check(map)) {
+      return this;
+    } else {
+      return NO_CHANGE;
+    }
   }
   get isDirty() {
     return assert.returnType((this._additionsHead !== null || this._changesHead !== null || this._removalsHead !== null), assert.type.boolean);

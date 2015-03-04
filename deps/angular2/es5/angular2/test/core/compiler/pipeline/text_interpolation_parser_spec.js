@@ -24,7 +24,7 @@ System.register(["rtts_assert/rtts_assert", "angular2/test_lib", "angular2/src/c
         var ignoreBindings = arguments[0] !== (void 0) ? arguments[0] : false;
         return new CompilePipeline([new MockStep((function(parent, current, control) {
           current.ignoreBindings = ignoreBindings;
-        })), new IgnoreChildrenStep(), new TextInterpolationParser(new Parser(new Lexer()), null)]);
+        })), new IgnoreChildrenStep(), new TextInterpolationParser(new Parser(new Lexer()))]);
       }
       it('should not look for text interpolation when ignoreBindings is true', (function() {
         var results = createPipeline(true).process(el('<div>{{expr1}}<span></span>{{expr2}}</div>'));

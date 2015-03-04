@@ -87,7 +87,7 @@ export function main() {
         } else if (isPresent(parent)) {
           current.inheritedProtoView = parent.inheritedProtoView;
         }
-      }), new ElementBinderBuilder(parser, null)]);
+      }), new ElementBinderBuilder(parser)]);
     }
     function instantiateView(protoView) {
       evalContext = new Context();

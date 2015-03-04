@@ -1,4 +1,4 @@
-System.register(["rtts_assert/rtts_assert", "angular2/change_detection", "angular2/src/facade/collection", "./property_binding_parser", "./text_interpolation_parser", "./directive_parser", "./view_splitter", "./element_binding_marker", "./proto_view_builder", "./proto_element_injector_builder", "./element_binder_builder", "./shim_shadow_css", "./shim_shadow_dom", "angular2/src/core/compiler/directive_metadata", "angular2/src/core/compiler/shadow_dom_strategy", "angular2/src/facade/lang", "angular2/src/facade/dom"], function($__export) {
+System.register(["rtts_assert/rtts_assert", "angular2/change_detection", "angular2/src/facade/collection", "./property_binding_parser", "./text_interpolation_parser", "./directive_parser", "./view_splitter", "./element_binding_marker", "./proto_view_builder", "./proto_element_injector_builder", "./element_binder_builder", "./shim_shadow_css", "./shim_shadow_dom", "angular2/src/core/compiler/directive_metadata", "angular2/src/core/compiler/shadow_dom_strategy", "angular2/src/facade/dom"], function($__export) {
   "use strict";
   var assert,
       ChangeDetection,
@@ -18,17 +18,15 @@ System.register(["rtts_assert/rtts_assert", "angular2/change_detection", "angula
       DirectiveMetadata,
       ShadowDomStrategy,
       EmulatedShadowDomStrategy,
-      stringify,
       DOM;
   function createDefaultSteps(changeDetection, parser, compiledComponent, directives, shadowDomStrategy) {
     assert.argumentTypes(changeDetection, ChangeDetection, parser, Parser, compiledComponent, DirectiveMetadata, directives, assert.genericType(List, DirectiveMetadata), shadowDomStrategy, ShadowDomStrategy);
-    var compilationUnit = stringify(compiledComponent.type);
-    var steps = [new ViewSplitter(parser, compilationUnit)];
+    var steps = [new ViewSplitter(parser)];
     if (shadowDomStrategy instanceof EmulatedShadowDomStrategy) {
       var step = new ShimShadowCss(compiledComponent, shadowDomStrategy, DOM.defaultDoc().head);
       ListWrapper.push(steps, step);
     }
-    steps = ListWrapper.concat(steps, [new PropertyBindingParser(parser, compilationUnit), new DirectiveParser(directives), new TextInterpolationParser(parser, compilationUnit), new ElementBindingMarker(), new ProtoViewBuilder(changeDetection, shadowDomStrategy), new ProtoElementInjectorBuilder(), new ElementBinderBuilder(parser, compilationUnit)]);
+    steps = ListWrapper.concat(steps, [new PropertyBindingParser(parser), new DirectiveParser(directives), new TextInterpolationParser(parser), new ElementBindingMarker(), new ProtoViewBuilder(changeDetection, shadowDomStrategy), new ProtoElementInjectorBuilder(), new ElementBinderBuilder(parser)]);
     if (shadowDomStrategy instanceof EmulatedShadowDomStrategy) {
       var step = new ShimShadowDom(compiledComponent, shadowDomStrategy);
       ListWrapper.push(steps, step);
@@ -70,8 +68,6 @@ System.register(["rtts_assert/rtts_assert", "angular2/change_detection", "angula
     }, function($__m) {
       ShadowDomStrategy = $__m.ShadowDomStrategy;
       EmulatedShadowDomStrategy = $__m.EmulatedShadowDomStrategy;
-    }, function($__m) {
-      stringify = $__m.stringify;
     }, function($__m) {
       DOM = $__m.DOM;
     }],

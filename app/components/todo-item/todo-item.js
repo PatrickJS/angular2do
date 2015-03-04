@@ -46,12 +46,12 @@ export class TodoItem {
 
       todo.content = target.value;
       this.todoService.update(todo);
-      this.todoService.editing(null);
+      this.todoService.editingTodo(null);
 
     } else if (which === keymap.esc) {
 
       this.todoService.update(todo);
-      this.todoService.editing(null);
+      this.todoService.editingTodo(null);
 
     }
   }
