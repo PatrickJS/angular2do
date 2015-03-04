@@ -1,6 +1,6 @@
 # Angular 2 Todo App
 
-Angular 2 is not packaged or ready for production... but this is a todo app with it.
+TodoMVC done with Angular2 alpha release. 
 
 ### Installation
 
@@ -33,8 +33,6 @@ edited the atscript flags in `traceur.js` (see `index.html` for the names of the
 
 
 ### TODO
- * Fix filters
+ * Update deps (traceur, systemjs, es6) and use npm
  * Create Flux version
- * Refactor Firebase todoStorage into TodoStorage service
- * Refactor style management
  * Add server for FastBoot
